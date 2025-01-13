@@ -1,0 +1,41 @@
+{
+    "name": "Pai Designs Lab",
+    "short_name": "Pai Lab",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#3d4d55",
+    "theme_color": "#b58863",
+    "icons": [
+        {
+            "src": "/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_colors": {
+        "primary": "#b58863",
+        "secondary": "#d3c3b9",
+        "accent": "#a79e9c",
+        "background": "#3d4d55",
+        "surface": "#2a3035",
+        "text-primary": "#ffffff",
+        "text-secondary": "#d3c3b9",
+        "highlight": "#ffd700",
+        "link": "#10233a"
+    }
+}

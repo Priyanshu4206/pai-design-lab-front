@@ -1,0 +1,34 @@
+:root {
+    --color-primary: #b58863;
+    --color-secondary: #d3c3b9;
+    --color-accent: #a79e9c;
+    --color-background: #3d4d55;
+    --color-surface: #2a3035;
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #d3c3b9;
+    --color-highlight: #ffd700;
+    --color-link: #10233a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+    font-family: "Lexend Deca", serif;
+}
+
+html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    background-color: #181818;
+    color: #a79e9c;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+a {
+    text-decoration: none;
+}
