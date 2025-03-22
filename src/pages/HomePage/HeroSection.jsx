@@ -141,7 +141,6 @@ const HeroSection = () => {
 
   return (
     <LayoutWrapper ref={sectionRef}>
-      <HeroNavbar />
       <VideoElement src={heroVideo} muted loop autoPlay playsInline type="video/mp4" inView={inView} />
       <ContentWrapper inView={inView}>
         <Heading inView={inView}>Designing Dreams, Building Realities</Heading>

@@ -1,192 +1,130 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { FaBars, FaTimes } from "react-icons/fa";
-import { BsChevronDown, BsChevronUp } from "react-icons/bs";
-import { navItems } from "../../dummyData/dummyData";
-import { useLocation, useNavigate } from "react-router";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { FaTimes } from 'react-icons/fa';
 
-const NavbarContainer = styled.div`
+const MobileMenu = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 60px;
-  background: var(--color-surface);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  height: 70px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-`;
-
-const Logo = styled.img`
-  height: 55px;
-  cursor: pointer;
-`;
-
-const Hamburger = styled.div`
-  font-size: 24px;
-  cursor: pointer;
-`;
-
-const Sidebar = styled.div`
-  position: fixed;
-  top: 0px;
-  left: ${({ isOpen }) => (isOpen ? "0" : "-100%")};
-  width: 100%;
   height: 100vh;
-  overflow-y: scroll;
-  background: #181818;
+  background-color: rgba(0, 0, 0, 0.95);
+  z-index: 999;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 30px 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: left 0.3s ease-in-out;
-  z-index: 999;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(${({ isOpen }) => (isOpen ? '0' : '-100%')});
+  transition: transform 0.4s ease-in-out;
 `;
 
-const NavList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 1.5rem 0;
-  flex: 1;
-`;
-
-const NavItem = styled.li`
-  margin: 20px 0;
-  font-size: 18px;
+const CloseButton = styled.div`
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  font-size: 24px;
+  color: var(--color-primary, #fff);
   cursor: pointer;
 `;
 
-const Dropdown = styled.div`
-  margin-left: 20px;
-  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
+const MobileNavLinks = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 `;
 
-const DropDownItems = styled.div`
-  a {
-    font-size: 18px;
-    color: #2c3e50;
-    text-decoration: none;
-    display: block;
-    margin: 15px 0;
-
-    &:hover {
-      color: #d55d2f;
-    }
+const MobileLink = styled(Link)`
+  position: relative;
+  font-size: 1.5rem;
+  color: var(--color-primary, #fff);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  transition: color 0.3s ease;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: var(--color-accent, #f8c675);
+    border-radius: 3px;
+    transition: width 0.3s ease;
   }
-`;
-
-const DemoButton = styled.button`
-  width: 300px;
-  margin: auto;
-  padding: 1rem 2rem;
-  font-size: 16px;
-  background: var(--color-primary);
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
-  border-radius: 8px;
-  cursor: pointer;
-
+  
   &:hover {
-    background: transparent;
-    color: var(--color-primary);
+    color: var(--color-accent, #f8c675);
+    
+    &:after {
+      width: 100%;
+    }
+  }
+  
+  &.active {
+    color: var(--color-accent, #f8c675);
+    
+    &:after {
+      width: 100%;
+    }
   }
 `;
 
-const ListItem = styled.h4`
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 20px;
-    padding: 16px;
-    margin: 10px 0;
-    border-bottom: 1px solid #ddd;
-
-    div{
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-`;
-
-const MobileNavbar = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [activeDropdown, setActiveDropdown] = useState(null);
-    const [activeSubDropdown, setActiveSubDropdown] = useState(null);
-
-    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-
-    const handleDropdownClick = (index) => {
-        setActiveDropdown((prev) => (prev === index ? null : index));
-        setActiveSubDropdown(null);
+const MobileNavbar = ({ isOpen, setIsOpen, isActive }) => {
+    const handleClose = () => {
+        setIsOpen(false);
     };
-
-    const handleSubDropdownClick = (index) => {
-        setActiveSubDropdown((prev) => (prev === index ? null : index));
-    };
-
-    const location = useLocation();
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        setIsSidebarOpen(false);
-    }, [location.pathname, setIsSidebarOpen]);
 
     return (
-        <>
-            <NavbarContainer>
-                <Logo
-                    src="/logo.png"
-                    alt="Logo"
-                    onClick={() => (window.location.href = "/")}
-                />
-                <Hamburger onClick={toggleSidebar}>
-                    {isSidebarOpen ? <FaTimes color="var(--color-primary)" /> : <FaBars color="var(--color-primary)" />}
-                </Hamburger>
-            </NavbarContainer>
-            <Sidebar isOpen={isSidebarOpen}>
-                <NavList>
-                    {navItems.map((item, index) => (
-                        <NavItem key={index}>
-                            <ListItem onClick={() => handleDropdownClick(index)}>
-                                <span>
-                                    {item.label}
-                                </span>
-                                {activeDropdown == index ? <BsChevronUp /> : <BsChevronDown />}
-                            </ListItem>
-                            {item.dropdown && (
-                                <Dropdown isOpen={activeDropdown === index}>
-                                    {item.items.map((subItem, subIndex) => (
-                                        <DropDownItems key={subIndex}>
-                                            <ListItem onClick={() => handleSubDropdownClick(subIndex)}>
-                                                <div>
-                                                    <subItem.icon color="#D55D2F" />
-                                                    <span>{subItem.title}</span>
-                                                </div>
-                                                {activeSubDropdown == subIndex ? <BsChevronUp /> : <BsChevronDown />}
-                                            </ListItem>
-                                            <Dropdown isOpen={activeSubDropdown === subIndex}>
-                                                {subItem.links.map((link, linkIndex) => (
-                                                    <a href={link.link} key={linkIndex}>
-                                                        {link.label}
-                                                    </a>
-                                                ))}
-                                            </Dropdown>
-                                        </DropDownItems>
-                                    ))}
-                                </Dropdown>
-                            )}
-                        </NavItem>
-                    ))}
-                </NavList>
-                <DemoButton onClick={() => navigate("/support/contact-us")}>Book Your Demo</DemoButton>
-            </Sidebar>
-        </>
+        <MobileMenu isOpen={isOpen}>
+            <CloseButton onClick={handleClose}>
+                <FaTimes />
+            </CloseButton>
+
+            <MobileNavLinks>
+                <MobileLink
+                    to="/"
+                    className={isActive('/') ? 'active' : ''}
+                    onClick={handleClose}
+                >
+                    Home
+                </MobileLink>
+
+                <MobileLink
+                    to="/about"
+                    className={isActive('/about') ? 'active' : ''}
+                    onClick={handleClose}
+                >
+                    About
+                </MobileLink>
+
+                <MobileLink
+                    to="/portfolio"
+                    className={isActive('/portfolio') ? 'active' : ''}
+                    onClick={handleClose}
+                >
+                    Portfolio
+                </MobileLink>
+
+                <MobileLink
+                    to="/gallery"
+                    className={isActive('/gallery') ? 'active' : ''}
+                    onClick={handleClose}
+                >
+                    Gallery
+                </MobileLink>
+
+                <MobileLink
+                    to="/contact"
+                    className={isActive('/contact') ? 'active' : ''}
+                    onClick={handleClose}
+                >
+                    Contact
+                </MobileLink>
+            </MobileNavLinks>
+        </MobileMenu>
     );
 };
 

@@ -1,33 +1,9 @@
-import React, { createElement, useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled, { css, keyframes } from 'styled-components';
-import { leftCards, navItems } from '../../dummyData/dummyData';
-import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
+import { FaBars } from 'react-icons/fa';
 import useInView from '../../hooks/useInView';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import { MdNavigateNext } from 'react-icons/md';
-
-const slideIn = keyframes`
-  from {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-`;
-
-const slideOut = keyframes`
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-`;
+import MobileNavbar from './MobileNavbar';
 
 const pullFromTop = keyframes`
   from {
@@ -48,18 +24,21 @@ const NavLayout = styled.nav`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 2;
+  z-index: 100;
   width: 100%;
   height: 70px;
-  display: ${(props) => (props.isVisible ? "flex" : "none")};
+  display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
   padding: 1rem 3rem;
-  background-color: ${(props) => props.activeDropdown ? "rgba(0, 0, 0, 0.5)" : "transparent"}; 
-  backdrop-filter: blur(${(props) => props.activeDropdown && "10px"});
+  background-color: ${({ isHeroSection, isScrolled }) =>
+    isHeroSection && !isScrolled ? 'transparent' : 'rgba(0, 0, 0, 0.7)'};
+  backdrop-filter: ${({ isHeroSection, isScrolled }) =>
+    isHeroSection && !isScrolled ? 'none' : 'blur(5px)'};
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
 
-  @media screen and (max-width: 768px){
+  @media screen and (max-width: 768px) {
     padding: 1rem;
   }
 `;
@@ -69,518 +48,170 @@ const LogoContainer = styled.img`
   height: auto;
   cursor: pointer;
   filter: contrast(150%);
-  opacity: 0;
-  ${({ inView }) => inView && animationMixin(pullFromTop)};
-`;
-
-const LeftWrapper = styled.div`
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
+  /* Always initialize with opacity 1 when animation is complete */
+  opacity: ${({ hasAnimated }) => (hasAnimated ? 1 : 0.8)};
+  /* Only animate if shouldAnimate is true, but always ensure visibility */
+  ${({ shouldAnimate }) => shouldAnimate && animationMixin(pullFromTop)};
+  /* Add display property to ensure always visible */
+  display: block;
 `;
 
 const NavItems = styled.div`
-  display: flex;
-  flex: 1;
+  display: ${({ isHeroSection, isScrolled }) =>
+    isHeroSection && !isScrolled ? 'none' : 'flex'};
   gap: 2rem;
-  height: 100%;
-  
-  @media screen and (max-width: 900px){
+  align-items: center;
+  margin-left: auto;
+
+  @media screen and (max-width: 768px) {
     display: none;
   }
 `;
 
-const NavItem = styled.div`
+const NavLink = styled(Link)`
   position: relative;
   cursor: pointer;
-  display: flex;
-  padding: 1rem 0;
-  opacity: 0;
-  ${({ inView, delay }) => inView && animationMixin(pullFromTop, delay)};
-`;
-
-const DropdownToggle = styled.span`
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
   font-size: 1.1rem;
-  color: var(--color-primary);
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-`;
-
-const GetInTouchButton = styled.button`
-  background-color: #fbeee0;
-  border: 2px solid #422800;
-  border-radius: 30px;
-  color: #422800;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 18px;
-  padding: 0 18px;
-  line-height: 50px;
-  text-align: center;
+  color: var(--color-accent, #f8c675);
   text-decoration: none;
-  user-select: none;
-  opacity: 0;
-  touch-action: manipulation;
-  transition: all 0.2s ease;
-  ${({ inView }) => inView && animationMixin(pullFromTop, 1)};
+  padding: 0.5rem 1rem;
+  opacity: ${({ hasAnimated }) => (hasAnimated ? 1 : 0)};
+  ${({ shouldAnimate, delay }) => shouldAnimate && animationMixin(pullFromTop, delay)};
+  transition: color 0.3s ease;
 
-  &:hover {
-    background-color:rgb(200, 191, 181); 
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: var(--color-primary, #fff);
+    border-radius: 3px;
+    transition: width 0.3s ease;
   }
 
-  @media screen and (max-width: 900px){
-    display: none;
+  &:hover {
+    color: var(--color-primary, #fff);
+    &:after {
+      width: 100%;
+    }
+  }
+
+  &.active {
+    color: var(--color-primary, #fff);
+    font-weight: 600;
+
+    &:after {
+      width: 100%;
+    }
   }
 `;
 
 const Hamburger = styled.div`
   font-size: 24px;
   cursor: pointer;
-  opacity: ${({ inView }) => inView ? 0 : 1};
-  ${({ inView }) => inView && animationMixin(pullFromTop)};
-`;
+  color: var(--color-primary, #fff);
+  display: none;
+  opacity: ${({ hasAnimated }) => (hasAnimated ? 1 : 0)};
+  ${({ shouldAnimate }) => shouldAnimate && animationMixin(pullFromTop)};
 
-const Sidebar = styled.div`
-  position: fixed;
-  top: 0px;
-  left: ${({ isOpen }) => (isOpen ? "0" : "-100%")};
-  width: 100%;
-  height: 100vh;
-  overflow-y: scroll;
-  background: #181818;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 20px 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: left 0.3s ease-in-out;
-  z-index: 999;
-`;
-
-const NavList = styled.ul`
-  list-style: none;
-  padding: 0;
-  flex: 1;
-`;
-
-const SidebarNavItem = styled.li`
-  margin: 20px 0;
-  font-size: 18px;
-  cursor: pointer;
-`;
-
-const Dropdown = styled.div`
-  margin-left: 20px;
-  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
-`;
-
-const DropDownItems = styled.div`
-  a {
-    font-size: 18px;
-    color: var(--color-primary);
-    text-decoration: none;
-    display: block;
-    margin: 15px 0;
-
-    &:hover {
-      color: var(--color-accent);
-    }
-  }
-`;
-
-const DemoButton = styled(GetInTouchButton)`
-  @media screen and (max-width: 900px){
+  @media screen and (max-width: 768px) {
     display: block;
   }
-`;
-
-const ListItem = styled.h4`
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 20px;
-    padding: 16px;
-    margin: 10px 0;
-    border-bottom: 1px solid #ddd;
-
-    div{
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-`;
-
-const FlexRow = styled.div`
-    display: flex;
-    gap: 1rem;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 1rem;
-`;
-
-
-const MegaMenuContainer = styled.div`
-  display: flex;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  top: 70px;
-  left: 0;
-  width: 100%;
-  z-index: 999;
-  animation: ${({ isExiting }) => (isExiting ? slideOut : slideIn)} 0.3s forwards;
-`;
-
-const LeftCards = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  padding: 2rem;
-  flex-direction: column;
-  gap: 1rem;
-  width: 400px;
-  background-color: var(--color-background);
-`;
-
-const Card = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--color-surface);
-  border-radius: 20px;
-  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
-  
-  img {
-    width: 125px;
-    aspect-ratio: 1;
-    border-radius: 20px;
-  }
-
-  div {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  h4 {
-    margin: 0;
-    font-size: 20px;
-    color: var(--color-primary);
-  }
-
-  p {
-    font-size: 17px;
-    margin: 0.25rem 0;
-    color: #8B5C43;
-  }
-
-  a {
-    color: var(--color-secondary);
-    letter-spacing: 2px;
-    width: fit-content;
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    border-radius: 3px;
-    transition: all 0.2s ease-in-out;
-
-    &:hover{
-        letter-spacing: 3px;
-    }
-  }
-`;
-
-const MenuColumns = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6%;
-  padding: 2rem;
-  overflow-y: scroll;
-  flex: 1;
-`;
-
-const MenuColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-
-  h5 {
-    font-weight: bold;
-    font-size: 20px;
-    color: var(--color-primary);
-  }
-
-  a { 
-    text-decoration: none;
-    color: var(--color-secondary);
-    font-size: 17px;
-    transition: color 0.3s;
-    
-    &:hover {
-      color: var(--color-accent);
-    }
-  }
-`;
-
-const ColumnHeading = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 0.5rem;
-`;
-
-const IconWrapper = styled.span`
-    color: var(--color-primary);
-`;
-
-const LinksList = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-left: 21px;
 `;
 
 const HeroNavbar = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const navRef = useRef(null);
-  const megaMenuRef = useRef();
   const inView = useInView(navRef);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null);
-  const [activeSubDropdown, setActiveSubDropdown] = useState(null);
-  const [isMobile, setIsMobile] = useState(window.matchMedia("(max-width: 900px)").matches);
-  const [isExiting, setIsExiting] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const navigate = useNavigate();
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
+  // Check if the current route is the Hero Section ("/")
+  const isHeroSection = location.pathname === '/';
+
+  // Track scroll position
   useEffect(() => {
     const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      const triggerHeight = 70;
-      setIsVisible(currentScroll <= triggerHeight);
+      if (window.scrollY > 100) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.matchMedia("(max-width: 900px)").matches);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-
-  const toggleDropdown = (label) => {
-    if (activeDropdown === label) {
-      setIsExiting(true);
-      setTimeout(() => {
-        setActiveDropdown(null);
-        setIsExiting(false);
-      }, 300);
+    if (isHeroSection) {
+      window.addEventListener('scroll', handleScroll);
     } else {
-      setActiveDropdown(label);
+      setIsScrolled(true); // Always show the navbar background on other pages
     }
-  };
 
-  const handleClickOutside = (e) => {
-    if (
-      megaMenuRef.current &&
-      !megaMenuRef.current.contains(e.target) &&
-      !e.target.closest(".dropdown-toggle")
-    ) {
-      setIsExiting(true);
-      setTimeout(() => {
-        setActiveDropdown(null);
-        setIsExiting(false);
-      }, 300);
-    }
-  };
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isHeroSection]);
 
+  // Track if initial animation has completed
   useEffect(() => {
-    if (activeDropdown) {
-      document.addEventListener("click", handleClickOutside);
-    } else {
-      document.removeEventListener("click", handleClickOutside);
+    if (inView && !hasAnimated) {
+      const timer = setTimeout(() => {
+        setHasAnimated(true);
+      }, 1500);
+
+      return () => clearTimeout(timer);
     }
+  }, [inView, hasAnimated]);
 
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [activeDropdown]);
-
-  const handleDropdownClick = (index) => {
-    setActiveDropdown((prev) => (prev === index ? null : index));
-    setActiveSubDropdown(null);
-  };
-
-  const handleSubDropdownClick = (index) => {
-    setActiveSubDropdown((prev) => (prev === index ? null : index));
-  };
-
-
-
+  // Close mobile menu when location changes
   useEffect(() => {
-    setIsSidebarOpen(false);
-  }, [location.pathname, setIsSidebarOpen]);
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Determine if we should animate
+  const shouldAnimate = inView && !hasAnimated;
+
+  const isActive = (path) => {
+    if (path === '/' && location.pathname === '/') return true;
+    if (path !== '/' && location.pathname.startsWith(path)) return true;
+    return false;
+  };
 
   return (
     <>
-      <NavLayout
-        ref={navRef}
-        activeDropdown={activeDropdown}
-        isVisible={isVisible}
-      >
+      <NavLayout ref={navRef} isHeroSection={isHeroSection} isScrolled={isScrolled}>
         <LogoContainer
           src="/logo.png"
-          alt="Pai Design Lab"
-          onClick={() => {
-            navigate('/');
-          }}
-          inView={inView}
+          alt="Logo"
+          onClick={() => navigate('/')}
+          shouldAnimate={shouldAnimate}
+          hasAnimated={hasAnimated}
         />
-        <LeftWrapper>
-          <NavItems>
-            {navItems.map((item, index) => (
-              <NavItem key={item.label} inView={inView} delay={0.5 + index * 0.1}>
-                {item.dropdown ? (
-                  <DropdownToggle
-                    className="dropdown-toggle"
-                    onClick={() => toggleDropdown(item.label)}
-                  >
-                    {item.label}
-                    {activeDropdown === item.label ? (
-                      <BsChevronUp color="var(--color-primary)" className="dropdown-toggle" />
-                    ) : (
-                      <BsChevronDown color="var(--color-primary)" className="dropdown-toggle" />
-                    )}
-                  </DropdownToggle>
-                ) : (
-                  <a href={item.link}>{item.label}</a>
-                )}
-              </NavItem>
-            ))}
-          </NavItems>
-          <GetInTouchButton
-            onClick={() => navigate('/support/contact-us')}
-            inView={inView}
-          >
-            Get in Touch
-          </GetInTouchButton>
-          {isMobile &&
-            <Hamburger onClick={toggleSidebar} inView={inView}>
-              {isSidebarOpen ? <FaTimes /> : <FaBars color="var(--color-primary)" />}
-            </Hamburger>}
-        </LeftWrapper>
+
+        <NavItems isHeroSection={isHeroSection} isScrolled={isScrolled}>
+          <NavLink to="/" className={isActive('/') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.2}>
+            Home
+          </NavLink>
+
+          <NavLink to="/portfolio" className={isActive('/portfolio') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.4}>
+            Portfolio
+          </NavLink>
+
+          <NavLink to="/gallery" className={isActive('/gallery') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.5}>
+            Gallery
+          </NavLink>
+
+          <NavLink to="/contact" className={isActive('/contact') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.6}>
+            Contact
+          </NavLink>
+        </NavItems>
+
+        <Hamburger onClick={() => setIsMobileMenuOpen(true)} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated}>
+          <FaBars />
+        </Hamburger>
       </NavLayout>
-      <Sidebar isOpen={isSidebarOpen}>
-        <FlexRow>
-          <LogoContainer
-            src="/logo.png"
-            alt="Pai Design Lab"
-            onClick={() => {
-              navigate('/');
-            }}
-            inView={inView}
-          />
-          <Hamburger onClick={toggleSidebar}>
-            <FaTimes color="var(--color-primary)" />
-          </Hamburger>
-        </FlexRow>
-        <NavList>
-          {navItems.map((item, index) => (
-            <SidebarNavItem key={index}>
-              <ListItem onClick={() => handleDropdownClick(index)}>
-                <span>
-                  {item.label}
-                </span>
-                {activeDropdown == index ? <BsChevronUp /> : <BsChevronDown />}
-              </ListItem>
-              {item.dropdown && (
-                <Dropdown isOpen={activeDropdown === index}>
-                  {item.items.map((subItem, subIndex) => (
-                    <DropDownItems key={subIndex}>
-                      <ListItem onClick={() => handleSubDropdownClick(subIndex)}>
-                        <div>
-                          <subItem.icon color="var(--color-primary)" />
-                          <span>{subItem.title}</span>
-                        </div>
-                        {activeSubDropdown == subIndex ? <BsChevronUp /> : <BsChevronDown />}
-                      </ListItem>
-                      <Dropdown isOpen={activeSubDropdown === subIndex}>
-                        {subItem.links.map((link, linkIndex) => (
-                          <a href={link.link} key={linkIndex}>
-                            {link.label}
-                          </a>
-                        ))}
-                      </Dropdown>
-                    </DropDownItems>
-                  ))}
-                </Dropdown>
-              )}
-            </SidebarNavItem>
-          ))}
-        </NavList>
-        <DemoButton onClick={() => navigate("/support/contact-us")}>Book Your Demo</DemoButton>
-      </Sidebar>
 
-
-      {navItems.map(
-        (item) =>
-          item.dropdown &&
-          activeDropdown === item.label && (
-            <MegaMenuContainer
-              key={item.label}
-              isExiting={isExiting}
-              ref={megaMenuRef}
-            >
-              <LeftCards>
-                {leftCards.map((card, index) => (
-                  <Card key={index}>
-                    <div>
-                      <h4>{card.title}</h4>
-                      <p>{card.description}</p>
-                      <a href={card.link}>Learn More <MdNavigateNext />
-                      </a>
-                    </div>
-                    <img src={card.image} alt={card.title} />
-                  </Card>
-                ))}
-              </LeftCards>
-              <MenuColumns>
-                {item.items.map((group, groupIndex) => (
-                  <MenuColumn key={groupIndex}>
-                    <ColumnHeading>
-                      <IconWrapper>
-                        {group.icon && createElement(group.icon)}
-                      </IconWrapper>
-                      <h5>{group.title}</h5>
-                      <MdNavigateNext color="var(--color-primary)" width={"24px"} height={"24px"} />
-                    </ColumnHeading>
-                    <LinksList>
-                      {group.links.map((link, linkIndex) => (
-                        <a key={linkIndex} href={link.link}>
-                          {link.label}
-                        </a>
-                      ))}
-                    </LinksList>
-                  </MenuColumn>
-                ))}
-              </MenuColumns>
-            </MegaMenuContainer>
-          )
-      )}
+      <MobileNavbar isOpen={isMobileMenuOpen} setIsOpen={setIsMobileMenuOpen} isActive={isActive} />
     </>
   );
 };

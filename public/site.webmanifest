@@ -4,7 +4,7 @@
     "start_url": "/",
     "display": "standalone",
     "background_color": "#3d4d55",
-    "theme_color": "#b58863",
+    "theme_color": "rgb(212 175 55)",
     "icons": [
         {
             "src": "/favicon-16x16.png",
@@ -28,7 +28,7 @@
         }
     ],
     "theme_colors": {
-        "primary": "#b58863",
+        "primary": "rgb(212 175 55)",
         "secondary": "#d3c3b9",
         "accent": "#a79e9c",
         "background": "#3d4d55",
