@@ -62,13 +62,24 @@ const slideFromLeft = keyframes`
   }
 `;
 
-const slideFromTop = keyframes`
+const slideInFromBottom = keyframes`
   from {
-    transform: translateY(-30px);
+    transform: translateY(50px);
     opacity: 0;
   }
   to {
     transform: translateY(0);
+    opacity: 1;
+  }
+`;
+
+const expandWidth = keyframes`
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 160px;
     opacity: 1;
   }
 `;
@@ -90,8 +101,7 @@ const shadowSwapEffect = keyframes`
 `;
 
 const SectionLayout = styled.section`
-    padding-top: 3rem;
-    margin-bottom: 5rem;
+    padding: 80px 0;
     width: 100%;
     min-height: 150vh;
     overflow: hidden;
@@ -102,14 +112,8 @@ const HeadingContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 3rem;
   overflow: hidden;
-  opacity: 0;
-  ${({ inView }) =>
-    inView &&
-    css`
-    animation: ${slideFromTop} 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    `};
+  margin-bottom: 2rem;
 
   @media screen and (max-width: 900px) {
     width: 100%;
@@ -120,10 +124,19 @@ const HeadingContainer = styled.div`
 const Subheading = styled.p`
   text-transform: uppercase;
   font-size: 0.9rem;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   font-weight: 500;
   color: var(--color-primary);
   margin-bottom: 0.5rem;
+  
+  opacity: 0;
+  animation: ${slideInFromBottom} 0.7s ease-out forwards;
+  animation-play-state: ${props => props.isVisible ? 'running' : 'paused'};
+`;
+
+const HeadingWrapper = styled.div`
+  overflow: hidden;
+  width: 100%;
 `;
 
 const Heading = styled.h1`
@@ -131,9 +144,14 @@ const Heading = styled.h1`
   font-weight: 300;
   line-height: 1.5;
   color: var(--color-text-primary);
-  margin: 0;
   text-align: center;
+  margin: 0;
   padding: 0;
+  
+  transform: translateY(100px);
+  opacity: 0;
+  animation: ${slideInFromBottom} 0.5s ease-out 0.3s forwards;
+  animation-play-state: ${props => props.isVisible ? 'running' : 'paused'};
 
   @media screen and (max-width: 900px) {
     font-size: 2.5rem;
@@ -142,22 +160,14 @@ const Heading = styled.h1`
 
 const Underline = styled.div`
   height: 2px;
-  width: 160px;
   background-color: var(--color-primary);
   margin-top: 0.75rem;
   margin-bottom: 1rem;
-  position: relative;
-  overflow: hidden;
   
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.5);
-  }
+  width: 0;
+  opacity: 0;
+  animation: ${expandWidth} 0.6s ease-out 0.6s forwards;
+  animation-play-state: ${props => props.isVisible ? 'running' : 'paused'};
 `;
 
 const TestinomialWrapper = styled.div`
@@ -523,12 +533,34 @@ const Testimonials = () => {
   const [isExiting, setIsExiting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isSwapping, setIsSwapping] = useState(false);
+  const [isInView, setIsInView] = useState(false);
   const containerRef = useRef(null);
   const headingInView = useInView(containerRef);
   const intervalRef = useRef(null);
   const progressIntervalRef = useRef(null);
   const totalTime = 7000; // Total time between transitions
   const transitionTime = 500; // Faster animation duration for WordPress-like effect
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        if (rect.top < viewportHeight * 0.75 && rect.bottom > 0) {
+          setIsInView(true);
+        }
+      }
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const changeTestimonial = (newIndex) => {
     if (newIndex === currentIndex) return;
@@ -605,10 +637,12 @@ const Testimonials = () => {
 
   return (
     <SectionLayout ref={containerRef}>
-      <HeadingContainer inView={headingInView}>
-        <Subheading>Stories from Our Clients</Subheading>
-        <Heading>Client Testimonials</Heading>
-        <Underline />
+      <HeadingContainer>
+        <Subheading isVisible={isInView}>Stories from Our Clients</Subheading>
+        <HeadingWrapper>
+          <Heading isVisible={isInView}>Client Testimonials</Heading>
+        </HeadingWrapper>
+        <Underline isVisible={isInView} />
       </HeadingContainer>
       <TestinomialWrapper>
         <ContentWrapper>
@@ -648,7 +682,7 @@ const Testimonials = () => {
           <Image src={image} isExiting={isExiting} />
         </ReferenceWork>
       </TestinomialWrapper>
-    </SectionLayout>
+    </SectionLayout >
   )
 }
 

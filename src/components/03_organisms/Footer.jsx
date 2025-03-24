@@ -1,266 +1,366 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { FaLinkedin, FaLocationArrow, FaWhatsapp } from 'react-icons/fa';
-import { footerData } from '../../dummyData/dummyData';
+import { FaLinkedin, FaMapMarkerAlt, FaWhatsapp, FaInstagram, FaEnvelope, FaPhone } from 'react-icons/fa';
 
 const FooterWrapper = styled.footer`
-    background-color: var(--color-surface);
-    padding: 2rem;
-    padding-bottom: 1rem;
-    padding-top: 0;
-    color: var(--color-primary);
+    background-color: #212121;
+    color: var(--color-text-primary);
+    position: relative;
+`;
 
-    @media screen and (max-width: 550px){
-        padding: 2rem 1rem;
+const FooterTop = styled.div`
+    position: relative;
+    height: 5px;
+    background: linear-gradient(90deg, rgba(212,175,55,0.7) 0%, rgba(212,175,55,1) 50%, rgba(212,175,55,0.7) 100%);
+`;
+
+const FooterContent = styled.div`
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 5rem 2rem 1rem;
+    
+    @media screen and (max-width: 767px) {
+        padding: 3rem 1.5rem 2rem;
     }
 `;
 
 const MainSection = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 2rem;
-  padding: 2rem 0;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #ddd;
-
-  @media screen and (max-width: 768px) {
-    flex-direction: column;
-    align-items: center;
-  }
-`;
-
-const DetailsContainer = styled.div`
-    flex: 1;
-    min-width: 200px;
-    align-self: center;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-`;
-
-const CompanyDescription = styled.p`
-    width: 75%;
-    font-size: 1rem;
-    line-height: 1.5;
-    font-weight: 200;
-
-    @media screen and (max-width: 768px){
-        width: 100%;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 4rem;
+    
+    @media screen and (max-width: 1024px) {
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+    }
+    
+    @media screen and (max-width: 767px) {
+        grid-template-columns: 1fr;
+        gap: 3rem;
     }
 `;
 
-const MenuContainer = styled.div`
-    flex: 1;
-    display: flex;
-    gap: 4rem;
-    flex-wrap: wrap;
-    width: 100%;
+const BrandSection = styled.div`
+    @media screen and (max-width: 1024px) {
+        grid-column: span 2;
+    }
+    
+    @media screen and (max-width: 767px) {
+        grid-column: span 1;
+    }
+`;
 
-    @media screen and (max-width: 550px){
+const LogoWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+`;
+
+const Logo = styled.img`
+    height: 60px;
+    width: auto;
+`;
+
+const LogoText = styled.div`    
+    h2 {
+        font-size: 1.8rem;
+        font-weight: 400;
+        color: var(--color-primary);
+        margin: 0;
+        letter-spacing: 1px;
+    }
+    
+    span {
+        font-size: 0.9rem;
+        color: var(--color-text-secondary);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+`;
+
+const CompanyDescription = styled.p`
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+    font-weight: 300;
+    margin-bottom: 2rem;
+    max-width: 90%;
+`;
+
+const ContactInfo = styled.div`
+    display: flex;
+    gap: 5rem;
+    width: 100%;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+
+    @media screen and (max-width: 900px){
         gap: 2rem;
     }
 `;
 
-const CompanyAddress = styled.div`
-    margin: 1rem 0;
-    line-height: 1.4;
-    width: 85%;
-
+const ContactItem = styled.div`
+    display: flex;
+    svg {
+        color: var(--color-primary);
+        margin-right: 1rem;
+        min-width: 18px;
+        margin-top: 4px;
+    }
+    
+    div {
+        display: flex;
+        flex-direction: column;
+    }
+    
     span {
-        font-size: 0.9rem;
-        font-weight: 200;
-        color: var(--color-secondary);
+        color: var(--color-text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    
+    a {
+        color: var(--color-text-secondary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+        
+        &:hover {
+            color: var(--color-primary);
+        }
     }
 `;
-
 
 const Column = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  min-width: 110px;
+    display: flex;
+    flex-direction: column;
 `;
 
-const LogoWrapper = styled.img`
-    width: 250px;
-    height: auto;
-    cursor: pointer;
-
-    @media screen and (max-width: 450px){
-        margin: auto;
+const ColumnTitle = styled.h3`
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 1rem;
+    
+    &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background-color: var(--color-primary);
     }
 `;
 
-const Category = styled.div`
-  margin-bottom: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+const MenuLinks = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 `;
 
-const CategoryHead = styled.h4`
-  font-weight: 400;
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-  color: var(--color-primary);
+const StyledNavLink = styled(NavLink)`
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-left: 15px;
+    
+    &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 5px;
+        height: 5px;
+        background-color: var(--color-primary);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    &:hover {
+        color: var(--color-primary);
+        transform: translateX(5px);
+        
+        &:before {
+            opacity: 1;
+        }
+    }
 `;
 
-const NavItem = styled(NavLink)`
-  display: block;
-  margin: 0.3rem 0;
-  color: var(--color-secondary);
-  font-size: 1rem;
-  font-weight: 100;
-  text-decoration: none;
-
-  &:hover {
-    color: var(--color-primary);
-  }
+const SocialSection = styled.div`
+    margin-top: 2rem;
 `;
 
-const Button = styled.button`
-  background-color: #fbeee0;
-  border: 2px solid #422800;
-  border-radius: 30px;
-  color: #422800;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 18px;
-  padding: 0 18px;
-  line-height: 50px;
-  text-align: center;
-  text-decoration: none;
-  user-select: none;
-  touch-action: manipulation;
-  transition: all 0.2s ease;
-  width: fit-content;
-  min-width: 200px;
-  &:hover {
-    background-color:rgb(200, 191, 181); 
-  }
-
-  @media screen and (max-width: 900px){
-    display: none;
-  }
+const SocialTitle = styled.h4`
+    font-size: 1rem;
+    color: #ffffff;
+    font-weight: 400;
+    margin-bottom: 1rem;
 `;
 
-const SocialMediaSection = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+const SocialIcons = styled.div`
+    display: flex;
+    gap: 1rem;
 `;
 
-const IconWrapper = styled.div`
-  border-radius: 50%;
-  padding: 10px;
-  background-color: transparent;
-  border: 1px solid #ddd;
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    border-color: var(--color-primary);
-    cursor: pointer;
-  }
+const SocialIcon = styled.a`
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-secondary);
+    transition: all 0.3s ease;
+    
+    &:hover {
+        background-color: var(--color-primary);
+        color: #212121;
+        transform: translateY(-3px);
+    }
 `;
 
-const CopyWriteWrapper = styled.div`
-    text-align: center;
-    margin-top: 1rem;
+const FooterDivider = styled.div`
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.05);
+    margin-bottom: 1.5rem;
+`;
+
+const FooterBottom = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-
-    @media screen and (max-width: 768px){
-        justify-content: center;
+    
+    @media screen and (max-width: 767px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
     }
 `;
 
-const LocationLink = styled.a`
+const Copyright = styled.div`
+    color: var(--color-accent);
+    font-size: 0.9rem;
+`;
+
+const FooterNav = styled.div`
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    color: var(--color-primary);
-    font-size: 0.95rem;
-
-    svg {
-        color: var(--color-primary);
-        transition: color 0.3s ease;
-    }
-
-    &:hover svg {
-        color: var(--color-secondary);
+    gap: 1.5rem;
+    
+    @media screen and (max-width: 500px) {
+        flex-wrap: wrap;
+        gap: 1rem 1.5rem;
     }
 `;
 
 const Footer = () => {
+    const quickLinks = [
+        { name: "Home", path: "/" },
+        { name: "Portfolio", path: "/portfolio" },
+        { name: "Gallery", path: "/gallery" },
+        { name: "About Us", path: "/about" },
+        { name: "Contact", path: "/contact" }
+    ];
+
+    const serviceLinks = [
+        { name: "Residential Architecture", path: "/portfolio" },
+        { name: "Commercial Architecture", path: "/portfolio" },
+        { name: "Interior Design", path: "/portfolio" },
+        { name: "Urban Planning", path: "/portfolio" },
+        { name: "3D Visualization", path: "/portfolio" }
+    ];
+
     return (
         <FooterWrapper>
-            <MainSection>
-                <DetailsContainer>
-                    <LogoWrapper
-                        src="/logo.png"
-                        alt="Company Logo"
-                        onClick={() => window.location.href = "/"}
-                    />
+            <FooterTop />
+            <FooterContent>
+                <MainSection>
+                    <BrandSection>
+                        <LogoWrapper>
+                            <LogoText>
+                                <h2>PaiDesignLab</h2>
+                                <span>Architecture • Design • Innovation</span>
+                            </LogoText>
+                        </LogoWrapper>
 
-                    <CompanyDescription>
-                        Transform your Ayurveda or Homeopathy clinic with MedApps by Finprod Technologies—streamlining operations and elevating patient care.
-                    </CompanyDescription>
+                        <CompanyDescription>
+                            PaiDesignLab is an award-winning architectural studio founded in 2025. We combine innovative design thinking with sustainable practices to create spaces that inspire and endure.
+                        </CompanyDescription>
+                    </BrandSection>
+                    <Column>
+                        <ColumnTitle>Quick Links</ColumnTitle>
+                        <MenuLinks>
+                            {quickLinks.map((link, index) => (
+                                <StyledNavLink key={index} to={link.path}>
+                                    {link.name}
+                                </StyledNavLink>
+                            ))}
+                        </MenuLinks>
+                    </Column>
 
-                    <CompanyAddress>
-                        <LocationLink
-                            href="https://www.google.com/maps/place/F-19,+Krishna+Apra+Plaza,+Alpha+Commercial+Belt,+Greater+Noida,+Uttar+Pradesh+-+201310"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <FaLocationArrow size={24} />
-                            <span>F-19, Krishna Apra Plaza, Alpha Commercial Belt, Greater Noida, UP - 201310</span>
-                        </LocationLink>
-                    </CompanyAddress>
+                    <Column>
+                        <ColumnTitle>Our Services</ColumnTitle>
+                        <MenuLinks>
+                            {serviceLinks.map((link, index) => (
+                                <StyledNavLink key={index} to={link.path}>
+                                    {link.name}
+                                </StyledNavLink>
+                            ))}
+                        </MenuLinks>
+                    </Column>
+                </MainSection>
+                <ContactInfo>
+                    <ContactItem>
+                        <FaMapMarkerAlt size={18} />
+                        <span>123 Design Avenue, Creative District<br />New York, NY 10001</span>
+                    </ContactItem>
 
-                    <Button onClick={() => window.location.href = "/support/contact-us"}>
-                        Get In Touch
-                    </Button>
-                </DetailsContainer>
+                    <ContactItem>
+                        <FaPhone size={18} />
+                        <div>
+                            <span>Call Us:</span>
+                            <a href="tel:+12123456789">+1 (212) 345-6789</a>
+                        </div>
+                    </ContactItem>
 
-                <MenuContainer>
-                    {footerData.map((category, index) => (
-                        <Column key={index}>
-                            <Category>
-                                <CategoryHead>{category.title}</CategoryHead>
-                                {category.links.map((link, idx) => (
-                                    <NavItem key={idx} to={link.path}>
-                                        {link.name}
-                                    </NavItem>
-                                ))}
-                            </Category>
-                        </Column>
-                    ))}
-                </MenuContainer>
-            </MainSection>
+                    <ContactItem>
+                        <FaEnvelope size={18} />
+                        <div>
+                            <span>Email Us:</span>
+                            <a href="mailto:info@paidesignlab.com">info@paidesignlab.com</a>
+                        </div>
+                    </ContactItem>
+                </ContactInfo>
 
-            <CopyWriteWrapper>
-                <p>© Copyright 2025, All Rights Reserved by Finprod Technologies Private Limited</p>
-                <SocialMediaSection>
-                    <IconWrapper onClick={() => window.open("https://www.linkedin.com/company/finprod-technologies-private-limited/", "_blank")}>
-                        <FaLinkedin size={20} />
-                    </IconWrapper>
-                    <IconWrapper
-                        onClick={() =>
-                            window.open("https://wa.me/+919910355890", "_blank", "noopener,noreferrer")
-                        }
-                    >
-                        <FaWhatsapp size={20} />
-                    </IconWrapper>
-                </SocialMediaSection>
-            </CopyWriteWrapper>
-        </FooterWrapper >
+                <FooterDivider />
+
+                <FooterBottom>
+                    <Copyright>
+                        © {new Date().getFullYear()} PaiDesignLab. All Rights Reserved.
+                    </Copyright>
+
+                    <FooterNav>
+                        <SocialIcon href="https://www.linkedin.com/company/paidesignlab" target="_blank" rel="noopener noreferrer">
+                            <FaLinkedin size={18} />
+                        </SocialIcon>
+                        <SocialIcon href="https://www.instagram.com/paidesignlab" target="_blank" rel="noopener noreferrer">
+                            <FaInstagram size={18} />
+                        </SocialIcon>
+                        <SocialIcon href="https://wa.me/+12123456789" target="_blank" rel="noopener noreferrer">
+                            <FaWhatsapp size={18} />
+                        </SocialIcon>
+                    </FooterNav>
+                </FooterBottom>
+            </FooterContent>
+        </FooterWrapper>
     );
 };
 

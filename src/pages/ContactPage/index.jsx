@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import AnimatedSection from '../components/AnimatedSection';
 import { MapPin, Phone, Mail, Send, CheckCircle } from 'lucide-react';
+import useScrollToTop from '../../hooks/useScrollToTop';
 
 // Styled Components
 const PageWrapper = styled.div`
@@ -259,6 +260,7 @@ const ContactPage = () => {
       }, 5000);
     }, 1500);
   };
+  useScrollToTop();
 
   return (
     <PageWrapper>
