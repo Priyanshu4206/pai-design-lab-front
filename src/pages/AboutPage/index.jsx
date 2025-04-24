@@ -373,6 +373,7 @@ const MemberName = styled.h3`
 `;
 
 const MemberPosition = styled.p`
+  margin-top: 1rem;
   font-size: 1rem;
   color: var(--color-primary);
   margin-bottom: 1rem;
@@ -485,7 +486,6 @@ const AboutPage = () => {
                 <MemberName>{member.name}</MemberName>
                 <MemberPosition>{member.position}</MemberPosition>
                 <MemberDetails>
-                  <MemberContact>Email: {member.email}</MemberContact>
                   <MemberContact>Phone: {member.phone}</MemberContact>
                   <MemberContact>Education: {member.education}</MemberContact>
                 </MemberDetails>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import AnimatedSection from '../components/AnimatedSection';
-import { MapPin, Phone, Mail, Send, CheckCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, Send, CheckCircle, Check } from 'lucide-react';
 import useScrollToTop from '../../hooks/useScrollToTop';
 
 // Styled Components
@@ -118,6 +118,33 @@ const ContactLink = styled.a`
   }
 `;
 
+const PhoneNumberWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+`;
+
+const PhoneNumber = styled.a`
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: #d9a24a;
+  }
+`;
+
+const PhoneIcon = styled(Phone)`
+  margin-left: 0.5rem;
+  color: rgba(255, 255, 255, 0.5);
+  
+  ${PhoneNumber}:hover & {
+    color: #d9a24a;
+  }
+`;
+
 const OfficeHours = styled.div`
   margin-top: 3rem;
 `;
@@ -215,6 +242,21 @@ const SuccessText = styled.p`
   color: rgba(255, 255, 255, 0.7);
 `;
 
+// Phone number component with call functionality
+const CallablePhoneNumber = ({ number }) => {
+  // Format the number for tel: link by removing spaces
+  const formattedNumber = number.replace(/\s+/g, '');
+
+  return (
+    <PhoneNumberWrapper>
+      <PhoneNumber href={`tel:${formattedNumber}`}>
+        {number}
+        <PhoneIcon size={14} />
+      </PhoneNumber>
+    </PhoneNumberWrapper>
+  );
+};
+
 // Main Component
 const ContactPage = () => {
   const [formState, setFormState] = useState({
@@ -248,12 +290,6 @@ const ContactPage = () => {
         message: ''
       });
 
-      // toast({
-      //     title: "Message Sent",
-      //     description: "Thank you for your message. We'll get back to you soon!",
-      //     variant: "default",
-      // });
-
       // Reset success message after some time
       setTimeout(() => {
         setIsSubmitted(false);
@@ -281,31 +317,36 @@ const ContactPage = () => {
                 <ContactDetails>
                   <ContactItem>
                     <IconWrapper>
-                      <MapPin className="h-5 w-5" style={{ color: 'var(--architect-gold)' }} />
+                      <MapPin className="h-5 w-5" style={{ color: '#d9a24a' }} />
                     </IconWrapper>
                     <ContactText>
                       <ContactLabel>Our Location</ContactLabel>
-                      <ContactValue>123 Design Avenue, New York, NY 10001, USA</ContactValue>
+                      <ContactValue>
+                        12th Floor, Gold Tower, Wave Noida,<br />
+                        Sector-18, Noida, Uttar Pradesh
+                      </ContactValue>
                     </ContactText>
                   </ContactItem>
 
                   <ContactItem>
                     <IconWrapper>
-                      <Mail className="h-5 w-5" style={{ color: 'var(--architect-gold)' }} />
+                      <Mail className="h-5 w-5" style={{ color: '#d9a24a' }} />
                     </IconWrapper>
                     <ContactText>
                       <ContactLabel>Email Us</ContactLabel>
-                      <ContactLink href="mailto:info@paidesignlab.com">info@paidesignlab.com</ContactLink>
+                      <ContactLink href="mailto:info@paidesignstudio.com">info@paidesignstudio.com</ContactLink>
                     </ContactText>
                   </ContactItem>
 
                   <ContactItem>
                     <IconWrapper>
-                      <Phone className="h-5 w-5" style={{ color: 'var(--architect-gold)' }} />
+                      <Phone className="h-5 w-5" style={{ color: '#d9a24a' }} />
                     </IconWrapper>
                     <ContactText>
                       <ContactLabel>Call Us</ContactLabel>
-                      <ContactLink href="tel:+12123456789">+1 (212) 345-6789</ContactLink>
+                      <CallablePhoneNumber number="+91 97181 22864" />
+                      <CallablePhoneNumber number="+91 99990 33566" />
+                      <CallablePhoneNumber number="+91 87556 44379" />
                     </ContactText>
                   </ContactItem>
                 </ContactDetails>
@@ -325,7 +366,7 @@ const ContactPage = () => {
                 {isSubmitted ? (
                   <SuccessMessage>
                     <SuccessContent>
-                      <CheckCircle style={{ height: '4rem', width: '4rem', color: 'var(--architect-gold)', margin: '0 auto 1rem auto' }} />
+                      <CheckCircle style={{ height: '4rem', width: '4rem', color: '#d9a24a', margin: '0 auto 1rem auto' }} />
                       <SuccessTitle>Thank You!</SuccessTitle>
                       <SuccessText>Your message has been sent successfully. We'll get back to you soon.</SuccessText>
                     </SuccessContent>

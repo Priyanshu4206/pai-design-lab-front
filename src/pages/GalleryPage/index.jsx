@@ -205,6 +205,7 @@ const GalleryGrid = styled.div`
   grid-auto-flow: dense;
   transition: opacity 0.3s ease;
   min-height: 600px;
+  margin-bottom: 2rem;
   opacity: ${props => props.isTransitioning ? 0.6 : 1};
   
   @media (max-width: 1100px) {
@@ -325,6 +326,138 @@ const ProjectType = styled.span`
   }
 `;
 
+const GalleryEndSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+  opacity: ${props => props.isVisible ? 1 : 0};
+  transform: translateY(${props => props.isVisible ? '0' : '20px'});
+  transition: opacity 0.5s ease, transform 0.5s ease;
+`;
+
+const EndSectionLine = styled.div`
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-primary),
+    transparent
+  );
+  margin-bottom: 2rem;
+`;
+
+const EndSectionText = styled.p`
+  color: var(--color-text-secondary);
+  font-size: 1.1rem;
+  font-weight: 300;
+  text-align: center;
+  max-width: 600px;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+`;
+
+const ContactButton = styled.a`
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  z-index: 1;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: var(--color-primary);
+    transition: width 0.3s ease;
+    z-index: -1;
+  }
+  
+  &:hover {
+    color: #000;
+    
+    &:before {
+      width: 100%;
+    }
+  }
+`;
+
+// Loader animation
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const pulse = keyframes`
+  0% { transform: scale(0.85); opacity: 0.5; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.85); opacity: 0.5; }
+`;
+
+const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 0;
+  width: 100%;
+  height: 120px;
+  margin-top: 2rem;
+  opacity: ${props => props.isVisible ? 1 : 0};
+  transition: opacity 0.3s ease;
+`;
+
+const LoaderRing = styled.div`
+  position: relative;
+  width: 50px;
+  height: 50px;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: ${spin} 1s linear infinite;
+  }
+`;
+
+const LoaderCore = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 15px;
+  height: 15px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  animation: ${pulse} 1.5s ease-in-out infinite;
+`;
+
+const GalleryLoader = ({ isLoading }) => (
+  <LoaderContainer isVisible={isLoading}>
+    <LoaderRing>
+      <LoaderCore />
+    </LoaderRing>
+  </LoaderContainer>
+);
+
 // Image component with loading state
 const GalleryImage = ({ src, alt, onLoad }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -363,6 +496,8 @@ const GalleryPage = () => {
   const [isInView, setIsInView] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [loadedImageCount, setLoadedImageCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [allLoaded, setAllLoaded] = useState(false);
   const containerRef = useRef(null);
   const allImagesCache = useRef({});
   const observer = useRef(null);
@@ -424,6 +559,7 @@ const GalleryPage = () => {
     if (category === activeCategory || isTransitioning) return;
 
     setIsTransitioning(true);
+    setAllLoaded(false); // Reset when changing categories
 
     // Short timeout for visual transition
     setTimeout(() => {
@@ -444,7 +580,7 @@ const GalleryPage = () => {
 
     const options = {
       root: null,
-      rootMargin: '100px',
+      rootMargin: '200px',
       threshold: 0.1
     };
 
@@ -452,7 +588,15 @@ const GalleryPage = () => {
       if (!isTransitioning && entries[0].isIntersecting) {
         const totalImages = imagesByCategory[activeCategory].length;
         if (visibleCount < totalImages) {
-          setVisibleCount(prev => Math.min(prev + 6, totalImages));
+          setIsLoading(true);
+          // Simulate network delay for smoother loading experience
+          setTimeout(() => {
+            setVisibleCount(prev => Math.min(prev + 6, totalImages));
+            setIsLoading(false);
+          }, 800);
+        } else if (!allLoaded && visibleCount >= totalImages) {
+          // All images in this category have been loaded
+          setAllLoaded(true);
         }
       }
     }, options);
@@ -491,7 +635,6 @@ const GalleryPage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Preload a small batch of images from each category for faster transitions
   useEffect(() => {
     // Preload first few images from each category
     Object.keys(imagesByCategory).forEach(category => {
@@ -560,6 +703,21 @@ const GalleryPage = () => {
           );
         })}
       </GalleryGrid>
+
+      {/* Display loader when loading more images */}
+      <GalleryLoader isLoading={isLoading} />
+
+      {/* Display end section when all images are loaded */}
+      {allLoaded && !isLoading && (
+        <GalleryEndSection isVisible={allLoaded}>
+          <EndSectionLine />
+          <EndSectionText>
+            Thank you for exploring our architectural portfolio. Each project represents our dedication
+            to creating spaces that inspire, elevate, and transform the human experience.
+          </EndSectionText>
+          <ContactButton href="/contact">Discuss Your Project</ContactButton>
+        </GalleryEndSection>
+      )}
     </PageContainer>
   );
 };

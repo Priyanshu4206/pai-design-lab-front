@@ -121,15 +121,31 @@ const ContactItem = styled.div`
         font-size: 0.95rem;
         line-height: 1.6;
     }
+`;
+
+const PhoneNumbersContainer = styled.div`
+    display: flex;
+    flex-direction: row !important;
+    flex-wrap: wrap;
+`;
+
+const PhoneLink = styled.a`
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
     
-    a {
-        color: var(--color-text-secondary);
-        text-decoration: none;
-        transition: color 0.3s ease;
-        
-        &:hover {
-            color: var(--color-primary);
-        }
+    &:hover {
+        color: var(--color-primary);
+    }
+`;
+
+const ContactLink = styled.a`
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    
+    &:hover {
+        color: var(--color-primary);
     }
 `;
 
@@ -261,13 +277,13 @@ const FooterNav = styled.div`
     }
 `;
 
-const PhoneGroup = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-`;
-
 const Footer = () => {
+    const phoneNumbers = [
+        { number: "+91 97181 22864", formatted: "+91 97181 22864" },
+        { number: "+91 99990 33566", formatted: "+91 99990 33566" },
+        { number: "+91 87556 44379", formatted: "+91 87556 44379" }
+    ];
+
     const quickLinks = [
         { name: "Home", path: "/" },
         { name: "Portfolio", path: "/portfolio" },
@@ -333,9 +349,16 @@ const Footer = () => {
                         <FaPhone size={18} />
                         <div>
                             <span>Call Us:</span>
-                            <PhoneGroup>
-                                <a href="tel:+919718122864">+91 97181 22864</a>
-                            </PhoneGroup>
+                            <PhoneNumbersContainer>
+                                {phoneNumbers.map((phone, index) => (
+                                    <React.Fragment key={index}>
+                                        <PhoneLink href={`tel:${phone.number.replace(/\s+/g, '')}`}>
+                                            {phone.formatted}
+                                        </PhoneLink>
+                                        {index < phoneNumbers.length - 1 && <span>,&nbsp;</span>}
+                                    </React.Fragment>
+                                ))}
+                            </PhoneNumbersContainer>
                         </div>
                     </ContactItem>
 
@@ -343,7 +366,7 @@ const Footer = () => {
                         <FaEnvelope size={18} />
                         <div>
                             <span>Email Us:</span>
-                            <a href="mailto:info@paidesignstudio.com">info@paidesignstudio.com</a>
+                            <ContactLink href="mailto:info@paidesignstudio.com">info@paidesignstudio.com</ContactLink>
                         </div>
                     </ContactItem>
                 </ContactInfo>
@@ -359,7 +382,7 @@ const Footer = () => {
                         <SocialIcon href="https://www.linkedin.com/company/paidesignstudio" target="_blank" rel="noopener noreferrer">
                             <FaLinkedin size={18} />
                         </SocialIcon>
-                        <SocialIcon href="https://www.instagram.com/paidesignstudio" target="_blank" rel="noopener noreferrer">
+                        <SocialIcon href="https://www.instagram.com/pai.design.studio?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">
                             <FaInstagram size={18} />
                         </SocialIcon>
                         <SocialIcon href="https://wa.me/+919718122864" target="_blank" rel="noopener noreferrer">
