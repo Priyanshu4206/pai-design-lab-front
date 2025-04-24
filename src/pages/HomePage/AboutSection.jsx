@@ -315,8 +315,8 @@ const AboutSection = () => {
   }, []);
 
   const descriptionText = isMobileView
-    ? "PAI Design Lab is a dynamic and innovative architectural firm dedicated to creating exceptional spaces that inspire and enrich the human experience."
-    : "PAI Design Lab is a dynamic and innovative architectural firm dedicated to creating exceptional spaces that inspire and enrich the human experience. Founded with a passion for design excellence and sustainability, our firm specializes in a wide range of projects, including residential, commercial, institutional, and mixed-use developments. We are committed to blending functionality, aesthetic beauty, and environmental responsibility in every project.";
+    ? "PAI Design Studio is a dynamic and innovative architectural firm dedicated to creating exceptional spaces that inspire and enrich the human experience."
+    : "PAI Design Studio is a dynamic and innovative architectural firm dedicated to creating exceptional spaces that inspire and enrich the human experience. Founded with a passion for design excellence and sustainability, our firm specializes in a wide range of projects, including residential, commercial, institutional, and mixed-use developments. We are committed to blending functionality, aesthetic beauty, and environmental responsibility in every project.";
 
   // Split description into lines for staggered animation
   const descriptionLines = descriptionText.split('. ').map(line => line.trim() + (line.endsWith('.') ? '' : '.'));
