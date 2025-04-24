@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import useInView from '../../hooks/useInView';
 import { teamMembers } from '../../dummyData/dummyData';
 import aboutImg from "../../assets/images/about/about_img.png";
+import useScrollToTop from '../../hooks/useScrollToTop';
 
 // Animations
 const slideInFromBottom = keyframes`
@@ -401,99 +402,100 @@ const MemberContact = styled.p`
 
 // About Page Component
 const AboutPage = () => {
-    const sectionRef = useRef(null);
-    const philosophyRef = useRef(null);
-    const teamRef = useRef(null);
-    const isInView = useInView(sectionRef);
-    const philosophyInView = useInView(philosophyRef);
-    const teamInView = useInView(teamRef);
+  const sectionRef = useRef(null);
+  const philosophyRef = useRef(null);
+  const teamRef = useRef(null);
+  const isInView = useInView(sectionRef);
+  const philosophyInView = useInView(philosophyRef);
+  const teamInView = useInView(teamRef);
+  useScrollToTop();
 
-    return (
-        <SectionLayout ref={sectionRef}>
-            {/* Main Heading */}
-            <HeadingContainer>
-                <Subheading isVisible={isInView}>Who We Are</Subheading>
-                <HeadingWrapper>
-                    <Heading isVisible={isInView}>About Us</Heading>
-                </HeadingWrapper>
-                <Underline isVisible={isInView} />
-            </HeadingContainer>
+  return (
+    <SectionLayout ref={sectionRef}>
+      {/* Main Heading */}
+      <HeadingContainer>
+        <Subheading isVisible={isInView}>Who We Are</Subheading>
+        <HeadingWrapper>
+          <Heading isVisible={isInView}>About Us</Heading>
+        </HeadingWrapper>
+        <Underline isVisible={isInView} />
+      </HeadingContainer>
 
-            {/* Philosophy Section */}
-            <PhilosophySection ref={philosophyRef}>
-                <PhilosophyContent isVisible={philosophyInView}>
-                    <PhilosophyTitle>Our Philosophy</PhilosophyTitle>
-                    <PhilosophyText>
-                        Architecture is more than designing structures; it's about crafting experiences that resonate with people and environments. At our core, we believe in the seamless integration of form and function, creating spaces that not only captivate the eye but enhance the quality of life.
-                    </PhilosophyText>
-                    <PhilosophyText>
-                        With each project, we strive to push boundaries while respecting the context and culture of the surroundings. Our designs emerge from a deep understanding of the client's vision, the site's characteristics, and the environmental considerations that shape our modern world.
-                    </PhilosophyText>
-                    <ValuesContainer>
-                        <ValuesHeading>Our Core Values</ValuesHeading>
-                        <ValuesList>
-                            <ValueItem>
-                                <ValueText>Sustainable Innovation</ValueText>
-                            </ValueItem>
-                            <ValueItem>
-                                <ValueText>Contextual Harmony</ValueText>
-                            </ValueItem>
-                            <ValueItem>
-                                <ValueText>Functional Excellence</ValueText>
-                            </ValueItem>
-                            <ValueItem>
-                                <ValueText>Collaborative Process</ValueText>
-                            </ValueItem>
-                            <ValueItem>
-                                <ValueText>Material Integrity</ValueText>
-                            </ValueItem>
-                            <ValueItem>
-                                <ValueText>Client-Centered Design</ValueText>
-                            </ValueItem>
-                        </ValuesList>
-                    </ValuesContainer>
-                </PhilosophyContent>
+      {/* Philosophy Section */}
+      <PhilosophySection ref={philosophyRef}>
+        <PhilosophyContent isVisible={philosophyInView}>
+          <PhilosophyTitle>Our Philosophy</PhilosophyTitle>
+          <PhilosophyText>
+            Architecture is more than designing structures; it's about crafting experiences that resonate with people and environments. At our core, we believe in the seamless integration of form and function, creating spaces that not only captivate the eye but enhance the quality of life.
+          </PhilosophyText>
+          <PhilosophyText>
+            With each project, we strive to push boundaries while respecting the context and culture of the surroundings. Our designs emerge from a deep understanding of the client's vision, the site's characteristics, and the environmental considerations that shape our modern world.
+          </PhilosophyText>
+          <ValuesContainer>
+            <ValuesHeading>Our Core Values</ValuesHeading>
+            <ValuesList>
+              <ValueItem>
+                <ValueText>Sustainable Innovation</ValueText>
+              </ValueItem>
+              <ValueItem>
+                <ValueText>Contextual Harmony</ValueText>
+              </ValueItem>
+              <ValueItem>
+                <ValueText>Functional Excellence</ValueText>
+              </ValueItem>
+              <ValueItem>
+                <ValueText>Collaborative Process</ValueText>
+              </ValueItem>
+              <ValueItem>
+                <ValueText>Material Integrity</ValueText>
+              </ValueItem>
+              <ValueItem>
+                <ValueText>Client-Centered Design</ValueText>
+              </ValueItem>
+            </ValuesList>
+          </ValuesContainer>
+        </PhilosophyContent>
 
-                <PhilosophyImage isVisible={philosophyInView}>
-                    <AccentSquare />
-                    <MainImage src={aboutImg} alt="Architectural detail showcasing our philosophy" />
-                    <GoldAccent />
-                </PhilosophyImage>
-            </PhilosophySection>
+        <PhilosophyImage isVisible={philosophyInView}>
+          <AccentSquare />
+          <MainImage src={aboutImg} alt="Architectural detail showcasing our philosophy" />
+          <GoldAccent />
+        </PhilosophyImage>
+      </PhilosophySection>
 
-            {/* Team Members Section */}
-            <TeamContainer ref={teamRef}>
-                <HeadingContainer>
-                    <Subheading isVisible={teamInView}>Our Professionals</Subheading>
-                    <HeadingWrapper>
-                        <Heading isVisible={teamInView}>Meet The Team</Heading>
-                    </HeadingWrapper>
-                    <Underline isVisible={teamInView} />
-                </HeadingContainer>
+      {/* Team Members Section */}
+      <TeamContainer ref={teamRef}>
+        <HeadingContainer>
+          <Subheading isVisible={teamInView}>Our Professionals</Subheading>
+          <HeadingWrapper>
+            <Heading isVisible={teamInView}>Meet The Team</Heading>
+          </HeadingWrapper>
+          <Underline isVisible={teamInView} />
+        </HeadingContainer>
 
-                <TeamGrid>
-                    {teamMembers.map((member, index) => (
-                        <TeamMemberCard
-                            key={member.id}
-                            isVisible={teamInView}
-                            delay={`${0.3 * (index + 1)}s`}
-                        >
-                            <MemberImage src={member.image} alt={member.name} />
-                            <MemberInfo>
-                                <MemberName>{member.name}</MemberName>
-                                <MemberPosition>{member.position}</MemberPosition>
-                                <MemberDetails>
-                                    <MemberContact>Email: {member.email}</MemberContact>
-                                    <MemberContact>Phone: {member.phone}</MemberContact>
-                                    <MemberContact>Education: {member.education}</MemberContact>
-                                </MemberDetails>
-                            </MemberInfo>
-                        </TeamMemberCard>
-                    ))}
-                </TeamGrid>
-            </TeamContainer>
-        </SectionLayout>
-    );
+        <TeamGrid>
+          {teamMembers.map((member, index) => (
+            <TeamMemberCard
+              key={member.id}
+              isVisible={teamInView}
+              delay={`${0.3 * (index + 1)}s`}
+            >
+              <MemberImage src={member.image} alt={member.name} />
+              <MemberInfo>
+                <MemberName>{member.name}</MemberName>
+                <MemberPosition>{member.position}</MemberPosition>
+                <MemberDetails>
+                  <MemberContact>Email: {member.email}</MemberContact>
+                  <MemberContact>Phone: {member.phone}</MemberContact>
+                  <MemberContact>Education: {member.education}</MemberContact>
+                </MemberDetails>
+              </MemberInfo>
+            </TeamMemberCard>
+          ))}
+        </TeamGrid>
+      </TeamContainer>
+    </SectionLayout>
+  );
 };
 
 export default AboutPage;
