@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 import { BsArrowLeft, BsArrowRight, BsPersonCircle } from "react-icons/bs";
-import { Testimonials } from '../../dummyData/dummyData';
+import { testimonials } from '../../dummyData/dummyData';
 import useInView from '../../hooks/useInView';
 
 // Card animations - moving up from bottom
@@ -170,7 +170,7 @@ const Underline = styled.div`
   animation-play-state: ${props => props.isVisible ? 'running' : 'paused'};
 `;
 
-const TestimonialsWrapper = styled.div`
+const TestimonialWrapper = styled.div`
     display: flex;
     position: relative;
 
@@ -653,7 +653,7 @@ const Testimonials = () => {
         </HeadingWrapper>
         <Underline isVisible={isInView} />
       </HeadingContainer>
-      <TestimonialWrapper Wrapper>
+      <TestimonialWrapper>
         <ContentWrapper>
           <CardContainer>
             <TestimonialCard isExiting={isExiting}>
