@@ -1,9 +1,3 @@
-import { FaBuilding, FaLeaf, FaHome, FaHandsHelping } from "react-icons/fa";
-import { MdSupport, MdMedicalServices, MdOutlineInfo } from "react-icons/md";
-import workImg1 from "../assets/images/home/proof1.jpg";
-// import workImg2 from "../assets/images/home/proof1.jpg";
-// import workImg3 from "../assets/images/home/proof1.jpg";
-import workImg4 from "../assets/images/home/proof1.jpg";
 import user1Img from "../assets/images/home/user1.jpg";
 
 import banquetImg1 from "../assets/images/BANQUET_HALL_ENGLAND/IMG_9793.jpg";
@@ -44,7 +38,7 @@ import omkarResidenceimg1 from "../assets/images/OMKAR_RESIDENCE_BULANDSHAHR/s29
 import omkarResidenceimg2 from "../assets/images/OMKAR_RESIDENCE_BULANDSHAHR/s31.jpg";
 
 import shashankGuestHouseimg1 from "../assets/images/GUEST_HOUSE_GURUGRAM/S12.jpg";
-import shashankGuestHouseimg2 from "../assets/images/GUEST_HOUSE_GURUGRAM/S14.jpg";
+import shashankGuestHouseimg2 from "../assets/images/GUEST_HOUSE_GURUGRAM/s14.jpg";
 
 import prasantResidenceimg1 from "../assets/images/PRASANT_RESIDENCE/G-59-VIEW-2.jpg";
 
