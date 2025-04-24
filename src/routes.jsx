@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
 const GalleryPage = lazy(() => import("./pages/GalleryPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const ErrorPage = lazy(() => import("./pages/ErrorPage"));
@@ -12,6 +13,7 @@ const AppRoutes = () => (
     <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/portfolio" element={<PortfolioPage />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/error" element={<ErrorPage />} />

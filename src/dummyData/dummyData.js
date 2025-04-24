@@ -43,7 +43,14 @@ import pradeepResidenceImg3 from "../assets/images/PRADEEP_RESIDENCE,_MIRZAPUR/I
 import omkarResidenceimg1 from "../assets/images/OMKAR_RESIDENCE_BULANDSHAHR/s29.jpg";
 import omkarResidenceimg2 from "../assets/images/OMKAR_RESIDENCE_BULANDSHAHR/s31.jpg";
 
+import shashankGuestHouseimg1 from "../assets/images/GUEST_HOUSE_GURUGRAM/S12.jpg";
+import shashankGuestHouseimg2 from "../assets/images/GUEST_HOUSE_GURUGRAM/S14.jpg";
+
 import prasantResidenceimg1 from "../assets/images/PRASANT_RESIDENCE/G-59-VIEW-2.jpg";
+
+import abhay_img from "../assets/images/about/abhay_tiwari.jpeg";
+import ishwer_img from "../assets/images/about/ishwer_singh.jpg";
+import prakhar_img from "../assets/images/about/prakhar_gupta.jpeg";
 
 export const footerData = [
   {
@@ -78,28 +85,28 @@ export const testimonials = [
   {
     id: 1,
     clientName: "Mr. Mukesh",
-    text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorum perspiciatis laboriosam cum libero nostrum, autem aliquam quas, placeat illo minus ipsam voluptatibus rerum quo? Tenetur doloribus accusamus eum, natus veniam recusandae omnis at ea rerum eligendi quae laudantium distinctio quam vero, reiciendis, quisquam repudiandae totam! Officiis aliquam reprehenderit molestias enim!",
+    text: "We were truly amazed by the way the team brought our vision to life. From the first sketch to the final walkthrough, every detail was thoughtfully executed. Our home feels luxurious yet deeply personal. Highly recommended!",
     image: mukeshResidenceImg1,
     userImg: user1Img,
   },
   {
     id: 2,
     clientName: "Mr. Omkar",
-    text: "Lorem ipsum dolor sit, amet consectetur libero nostrum, autem aliquam quas, placeat illo minus ipsam voluptatibus rerum quo? Tenetur doloribus accusamus eum, natus veniam recusandae omnis at ea rerum eligendi quae laudantium distinctio quam vero, reiciendis, quisquam repudiandae totam! Officiis aliquam reprehenderit molestias enim!",
+    text: "I wanted a space that blends modern aesthetics with traditional Indian values, and they delivered beyond expectations. The attention to vastu, natural light, and material selection was outstanding. Truly world-class service.",
     image: omkarResidenceimg1,
     userImg: user1Img,
   },
   {
     id: 3,
     clientName: "Mr. Rajdeep",
-    text: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquam reprehenderit molestias enim!",
+    text: "Working with this firm was a seamless experience. Their team is professional, creative, and very responsive. My office space now feels both elegant and extremely functional. Guests never stop complimenting the design!",
     image: rajdeepOfficeimg1,
     userImg: user1Img,
   },
   {
     id: 4,
     clientName: "Mr. Pradeep",
-    text: "Lorem ipsum dolor sit, amet con. Dolorum perspiciatis laboriosam cum libero nostrum, autem aliquam quas, placeat illo minus ipsam voluptatibus rerum quo? Tenetur dm, natus veniam recusandae omnis at ea rerum eligendi quae laudantium distinrit molestias enim!",
+    text: "From the start, they took time to understand our lifestyle, needs, and aspirations. What we got is not just a home, but a serene experience. The quality and finish is top-notch — truly a premium firm!",
     image: pradeepResidenceImg1,
     userImg: user1Img,
   },
@@ -425,6 +432,37 @@ export const projects = [
     status: "ONGOING",
     description:
       "The goal is to create a modern, tranquil retreat that offers guests a comfortable and private stay while showcasing a balance of modern architecture and natural surroundings. The residence is designed with open, light-filled spaces.",
-    imgs: [],
+    imgs: [shashankGuestHouseimg1, shashankGuestHouseimg2],
+  },
+];
+
+// Team members
+export const teamMembers = [
+  {
+    id: 1,
+    name: "Abhay Tiwari",
+    position: "Principal Architect",
+    image: abhay_img,
+    email: "abhaytiwari@gmail.com",
+    phone: "+9718122864",
+    education: "M.Arch, Yale University",
+  },
+  {
+    id: 2,
+    name: "Ishwer Singh",
+    position: "Senior Designer",
+    image: ishwer_img,
+    email: "ishwersingh@gmail.com",
+    phone: "+9999033566",
+    education: "B.Arch, MIT",
+  },
+  {
+    id: 3,
+    name: "Prakhar Gupta",
+    position: "Project Manager",
+    image: prakhar_img,
+    email: "prakhargupta@gmail.com",
+    phone: "+8755644379",
+    education: "M.Arch, Columbia University",
   },
 ];

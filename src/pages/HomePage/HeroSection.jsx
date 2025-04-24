@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import styled, { keyframes } from "styled-components";
+import { Link } from "react-router-dom";
 import heroVideo from "../../assets/images/home/video.mp4";
-import HeroNavbar from "../../components/03_organisms/HeroNavbar";
 import useInView from "../../hooks/useInView";
 
 const fadeIn = keyframes`
@@ -99,39 +99,31 @@ const SubHeading = styled.h2`
   }
 `;
 
-const CTAButton = styled.button`
-  background-color: #fbeee0;
-  border: 2px solid #422800;
-  border-radius: 30px;
-  box-shadow: #422800 8px 8px 0 0;
-  color: #422800;
-  cursor: pointer;
+const CTAButton = styled(Link)`
+  display: inline-block;
+  margin-top: 40px;
+  padding: 20px 35px;
+  background-color:rgba(43, 43, 43, 0.44);
+  color: var(--color-primary);
   font-weight: 600;
-  font-size: 18px;
-  padding: 0 18px;
-  line-height: 50px;
-  text-align: center;
   text-decoration: none;
-  user-select: none;
-  margin-top: 4rem;
-  touch-action: manipulation;
-  transition: all 0.2s ease;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 2px solid var(--color-primary);
+  cursor: pointer;
   opacity: 0;
-  animation: ${({ inView }) => (inView ? scaleUp : "none")} 0.8s ease-out 1.8s forwards;
-
+  animation: ${({ inView }) => (inView ? scaleUp : "none")} 0.8s ease-out 1.25s forwards;
+  
   &:hover {
-    box-shadow: #422800 1px 1px 0 0;
-    background-color:rgb(200, 191, 181); 
-  }
-
-  &:active {
-    box-shadow: #422800 2px 2px 0 0;
-    transform: translate(2px, 2px);
+    background-color: var(--color-primary);
+    color: var(--color-surface);
   }
 
   @media screen and (min-width: 768px) {
-    min-width: 120px;
-    padding: 0 25px;
+    min-width: 180px;
+    text-align: center;
   }
 `;
 
@@ -144,8 +136,8 @@ const HeroSection = () => {
       <VideoElement src={heroVideo} muted loop autoPlay playsInline type="video/mp4" inView={inView} />
       <ContentWrapper inView={inView}>
         <Heading inView={inView}>Designing Dreams, Building Realities</Heading>
-        <SubHeading inView={inView}>Transforming ideas into inspiring spaces. Let’s bring your vision to life – connect with us today!</SubHeading>
-        <CTAButton inView={inView}>Get in Touch</CTAButton>
+        <SubHeading inView={inView}>Transforming ideas into inspiring spaces. Let's bring your vision to life – connect with us today!</SubHeading>
+        <CTAButton to="/contact" inView={inView}>Get in Touch</CTAButton>
       </ContentWrapper>
     </LayoutWrapper>
   );

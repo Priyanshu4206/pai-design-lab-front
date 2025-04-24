@@ -349,7 +349,7 @@ const AboutSection = () => {
                 </AnimatedParagraph>
               ))}
             </Description>
-            <Button isVisible={isInView} onClick={() => navigate("/portfolio")}>
+            <Button isVisible={isInView} onClick={() => navigate("/about")}>
               Know More
             </Button>
           </Content>

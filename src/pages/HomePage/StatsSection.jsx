@@ -1,135 +1,107 @@
 import React, { useRef, useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import useInView from "../../hooks/useInView";
 
-const scaleUp = keyframes`
-  from{
-    opacity: 0;
-    scale: 0.75;
-  }
-  to{
-    opacity: 1;
-    scale: 1;
-  }
-`;
-
 const StatsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 5rem 0;
-  padding: 5rem;
+  padding: 8rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
   position: relative;
-
-  @media (max-width: 768px) {
-    padding: 5rem 1rem;
-  }
-`;
-
-const StatCard = styled.div`
-  flex: 1 1 calc(33.33% - 20px);
-  text-align: center;
-  padding: 20px;
-  min-width: 250px;
-  border: 1px solid transparent;
-  opacity: 0;
-  animation: ${({ inView }) => inView ? scaleUp : "none"} 1s ease-out forwards;
-
-  &:nth-child(3n + 2) {
-    border-left: 1px solid var(--color-accent);
-    border-right: 1px solid var(--color-accent);
-  }
-  &:nth-child(3n + 1) {
-    border-right: 1px solid var(--color-accent);
-  }
-  &:nth-child(3n) {
-    border-left: 1px solid var(--color-accent);
-  }
-  &:not(:nth-child(-n + 3)) {
-    border-top: 1px solid var(--color-accent);
-  }
-
-  @media (max-width: 768px) {
-    min-width: 150px;
-    margin-bottom: 20px;
-    border: none;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 100%;
+    background-color: var(--color-border, #e0e0e0);
   }
   
-  @media screen and (max-width: 487px){
-      &:nth-child(1) {
-        border-top: 1px solid var(--color-accent);
-     }
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--color-border, #e0e0e0);
   }
-
-  @media screen and (max-width: 339px){
-      &:nth-child(n) {
-        border-top: 1px solid var(--color-accent);
-     }
-  }
-`;
-
-const StatNumber = styled.div`
-  font-size: 2.5rem;
-  font-weight: 300;
-  color: var(--color-primary);
-  animation: ${({ inView }) => inView ? scaleUp : "none"} 1s ease-out forwards;
-
+  
   @media (max-width: 768px) {
-    font-size: 1.5rem;
+    padding: 6rem 1.5rem;
+    
+    &::before, &::after {
+      display: none;
+    }
   }
 `;
 
-const StatDescription = styled.div`
+const StatsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  height: 100%;
+  width: 100%;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-gap: 4rem;
+  }
+`;
+
+const StatQuadrant = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  position: relative;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
+  }
+`;
+
+const StatValue = styled.div`
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: var(--color-primary, #333);
+  margin-bottom: 1rem;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.5px;
+  line-height: 1;
+  
+  @media (max-width: 768px) {
+    font-size: 3rem;
+  }
+`;
+
+const StatLabel = styled.div`
   font-size: 1rem;
-  font-weight: 300;
-  color: var(--color-secondary);
-  margin-top: 10px;
-
+  font-weight: 400;
+  color: var(--color-text, #666);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  max-width: 70%;
+  line-height: 1.5;
+  
   @media (max-width: 768px) {
-    font-size: 0.9rem;
+    max-width: 80%;
   }
 `;
 
-const StatsSection = () => {
-  const sectionRef = useRef(null);
-  const inView = useInView(sectionRef);
-
-  const statsData = [
-    { value: 2024, label: "Year of Establishment" },
-    { value: 2, label: "Companies Served" },
-    { value: 25, suffix: "+", label: "Completed Projects" },
-    { value: 60000, suffix: " Sqft+", label: "Total Built-up Area" },
-    { value: 100, suffix: "%", label: "On-time Completion Rate" },
-  ];
-
-  return (
-    <StatsContainer ref={sectionRef}>
-      {statsData.map((stat, index) => (
-        <StatCard key={index} inView={inView}>
-          <AnimatedNumber
-            inView={inView}
-            value={stat.value}
-            suffix={stat.suffix || ""}
-          />
-          <StatDescription>{stat.label}</StatDescription>
-        </StatCard>
-      ))}
-    </StatsContainer>
-  );
-};
-
-const AnimatedNumber = ({ value, suffix, inView }) => {
+const AnimatedNumber = ({ value, suffix = "", inView }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (inView) {
-      const baseDuration = 1500;
-      const minDuration = 5000;
-      const effectiveDuration = value <= 50 ? minDuration : baseDuration;
-
-      const intervalDelay = 30;
-      const totalSteps = Math.ceil(effectiveDuration / intervalDelay);
-      const increment = Math.max(value / totalSteps, 1);
+      const duration = 2500;
+      const intervalDelay = 20;
+      const totalSteps = Math.ceil(duration / intervalDelay);
+      const increment = value / totalSteps;
 
       let current = 0;
 
@@ -139,18 +111,63 @@ const AnimatedNumber = ({ value, suffix, inView }) => {
           current = value;
           clearInterval(interval);
         }
-        setCount(Math.ceil(current));
+        setCount(Math.floor(current));
       }, intervalDelay);
 
       return () => clearInterval(interval);
     }
   }, [inView, value]);
 
+  return `${count}${suffix}`;
+};
+
+const StatsSection = () => {
+  const sectionRef = useRef(null);
+  const inView = useInView(sectionRef);
+
+  const statsData = [
+    {
+      value: 2024,
+      label: "Year of Establishment"
+    },
+    {
+      value: 25,
+      suffix: "+",
+      label: "Completed Projects"
+    },
+    {
+      value: 60000,
+      suffix: " Sqft+",
+      label: "Total Built-up Area"
+    },
+    {
+      value: 100,
+      suffix: "%",
+      label: "On-time Completion Rate"
+    }
+  ];
+
   return (
-    <StatNumber inView={inView}>
-      {count}
-      {suffix}
-    </StatNumber>
+    <StatsContainer ref={sectionRef}>
+      <StatsGrid>
+        {statsData.map((stat, index) => (
+          <StatQuadrant key={index}>
+            <StatValue>
+              {inView ? (
+                <AnimatedNumber
+                  inView={inView}
+                  value={stat.value}
+                  suffix={stat.suffix}
+                />
+              ) : (
+                `0${stat.suffix || ""}`
+              )}
+            </StatValue>
+            <StatLabel>{stat.label}</StatLabel>
+          </StatQuadrant>
+        ))}
+      </StatsGrid>
+    </StatsContainer>
   );
 };
 

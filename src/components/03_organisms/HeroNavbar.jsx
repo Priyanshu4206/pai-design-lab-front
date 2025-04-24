@@ -43,17 +43,34 @@ const NavLayout = styled.nav`
   }
 `;
 
-const LogoContainer = styled.img`
-  width: 200px;
-  height: auto;
+const BrandContainer = styled.div`
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  filter: contrast(150%);
-  /* Always initialize with opacity 1 when animation is complete */
   opacity: ${({ hasAnimated }) => (hasAnimated ? 1 : 0.8)};
-  /* Only animate if shouldAnimate is true, but always ensure visibility */
   ${({ shouldAnimate }) => shouldAnimate && animationMixin(pullFromTop)};
-  /* Add display property to ensure always visible */
-  display: block;
+`;
+
+const LogoImage = styled.img`
+  width: auto;
+  height: 40px;
+  margin-right: 10px;
+  filter: ${({ isHeroSection, isScrolled }) =>
+    isHeroSection && !isScrolled
+      ? 'brightness(0)'
+      : 'brightness(0) invert(1)'};
+  transition: filter 0.3s ease;
+`;
+
+const CompanyName = styled.h1`
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: ${({ isHeroSection, isScrolled }) =>
+    isHeroSection && !isScrolled ? '#000' : 'var(--color-primary)'};
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  margin: 0;
+  transition: color 0.3s ease;
 `;
 
 const NavItems = styled.div`
@@ -72,7 +89,7 @@ const NavLink = styled(Link)`
   position: relative;
   cursor: pointer;
   font-size: 1.1rem;
-  color: var(--color-accent, #f8c675);
+  color: var(--color-primary);
   text-decoration: none;
   padding: 0.5rem 1rem;
   opacity: ${({ hasAnimated }) => (hasAnimated ? 1 : 0)};
@@ -86,20 +103,20 @@ const NavLink = styled(Link)`
     left: 0;
     width: 0;
     height: 3px;
-    background-color: var(--color-primary, #fff);
+    background-color: var(--color-accent);
     border-radius: 3px;
     transition: width 0.3s ease;
   }
 
   &:hover {
-    color: var(--color-primary, #fff);
+    color: var(--color-accent);
     &:after {
       width: 100%;
     }
   }
 
   &.active {
-    color: var(--color-primary, #fff);
+    color: var(--color-accent);
     font-weight: 600;
 
     &:after {
@@ -111,10 +128,12 @@ const NavLink = styled(Link)`
 const Hamburger = styled.div`
   font-size: 24px;
   cursor: pointer;
-  color: var(--color-primary, #fff);
+  color: ${({ isHeroSection, isScrolled }) =>
+    isHeroSection && !isScrolled ? '#000' : 'var(--color-primary)'};
   display: none;
   opacity: ${({ hasAnimated }) => (hasAnimated ? 1 : 0)};
   ${({ shouldAnimate }) => shouldAnimate && animationMixin(pullFromTop)};
+  transition: color 0.3s ease;
 
   @media screen and (max-width: 768px) {
     display: block;
@@ -130,7 +149,6 @@ const HeroNavbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Check if the current route is the Hero Section ("/")
   const isHeroSection = location.pathname === '/';
 
   // Track scroll position
@@ -146,7 +164,7 @@ const HeroNavbar = () => {
     if (isHeroSection) {
       window.addEventListener('scroll', handleScroll);
     } else {
-      setIsScrolled(true); // Always show the navbar background on other pages
+      setIsScrolled(true);
     }
 
     return () => window.removeEventListener('scroll', handleScroll);
@@ -180,33 +198,54 @@ const HeroNavbar = () => {
   return (
     <>
       <NavLayout ref={navRef} isHeroSection={isHeroSection} isScrolled={isScrolled}>
-        <LogoContainer
-          src="/logo.png"
-          alt="Logo"
+        <BrandContainer
           onClick={() => navigate('/')}
           shouldAnimate={shouldAnimate}
           hasAnimated={hasAnimated}
-        />
+        >
+          <LogoImage
+            src="/logo.png"
+            alt="PAI Design Studio Logo"
+            isHeroSection={isHeroSection}
+            isScrolled={isScrolled}
+          />
+          <CompanyName
+            isHeroSection={isHeroSection}
+            isScrolled={isScrolled}
+          >
+            PAI DESIGN STUDIO
+          </CompanyName>
+        </BrandContainer>
 
         <NavItems isHeroSection={isHeroSection} isScrolled={isScrolled}>
           <NavLink to="/" className={isActive('/') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.2}>
             Home
           </NavLink>
 
-          <NavLink to="/portfolio" className={isActive('/portfolio') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.4}>
+          <NavLink to="/about" className={isActive('/about') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.4}>
+            About
+          </NavLink>
+
+          <NavLink to="/portfolio" className={isActive('/portfolio') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.5}>
             Portfolio
           </NavLink>
 
-          <NavLink to="/gallery" className={isActive('/gallery') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.5}>
+          <NavLink to="/gallery" className={isActive('/gallery') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.6}>
             Gallery
           </NavLink>
 
-          <NavLink to="/contact" className={isActive('/contact') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.6}>
+          <NavLink to="/contact" className={isActive('/contact') ? 'active' : ''} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated} delay={0.7}>
             Contact
           </NavLink>
         </NavItems>
 
-        <Hamburger onClick={() => setIsMobileMenuOpen(true)} shouldAnimate={shouldAnimate} hasAnimated={hasAnimated}>
+        <Hamburger
+          onClick={() => setIsMobileMenuOpen(true)}
+          shouldAnimate={shouldAnimate}
+          hasAnimated={hasAnimated}
+          isHeroSection={isHeroSection}
+          isScrolled={isScrolled}
+        >
           <FaBars />
         </Hamburger>
       </NavLayout>

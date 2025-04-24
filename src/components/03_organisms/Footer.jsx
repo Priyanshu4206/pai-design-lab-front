@@ -93,7 +93,7 @@ const ContactInfo = styled.div`
     display: flex;
     gap: 5rem;
     width: 100%;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
     margin-bottom: 2rem;
 
@@ -261,6 +261,12 @@ const FooterNav = styled.div`
     }
 `;
 
+const PhoneGroup = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+`;
+
 const Footer = () => {
     const quickLinks = [
         { name: "Home", path: "/" },
@@ -286,13 +292,13 @@ const Footer = () => {
                     <BrandSection>
                         <LogoWrapper>
                             <LogoText>
-                                <h2>PaiDesignLab</h2>
+                                <h2>PAI Design Studio</h2>
                                 <span>Architecture • Design • Innovation</span>
                             </LogoText>
                         </LogoWrapper>
 
                         <CompanyDescription>
-                            PaiDesignLab is an award-winning architectural studio founded in 2025. We combine innovative design thinking with sustainable practices to create spaces that inspire and endure.
+                            PAI Design Studio is an award-winning architectural studio combining innovative design thinking with sustainable practices to create spaces that inspire and endure.
                         </CompanyDescription>
                     </BrandSection>
                     <Column>
@@ -320,14 +326,16 @@ const Footer = () => {
                 <ContactInfo>
                     <ContactItem>
                         <FaMapMarkerAlt size={18} />
-                        <span>123 Design Avenue, Creative District<br />New York, NY 10001</span>
+                        <span>12th floor, Gold Tower, Wave Noida,<br />Sector-18, Noida, Uttar Pradesh</span>
                     </ContactItem>
 
                     <ContactItem>
                         <FaPhone size={18} />
                         <div>
                             <span>Call Us:</span>
-                            <a href="tel:+12123456789">+1 (212) 345-6789</a>
+                            <PhoneGroup>
+                                <a href="tel:+919718122864">+91 97181 22864</a>
+                            </PhoneGroup>
                         </div>
                     </ContactItem>
 
@@ -335,7 +343,7 @@ const Footer = () => {
                         <FaEnvelope size={18} />
                         <div>
                             <span>Email Us:</span>
-                            <a href="mailto:info@paidesignlab.com">info@paidesignlab.com</a>
+                            <a href="mailto:info@paidesignstudio.com">info@paidesignstudio.com</a>
                         </div>
                     </ContactItem>
                 </ContactInfo>
@@ -344,17 +352,17 @@ const Footer = () => {
 
                 <FooterBottom>
                     <Copyright>
-                        © {new Date().getFullYear()} PaiDesignLab. All Rights Reserved.
+                        © {new Date().getFullYear()} PAI Design Studio. All Rights Reserved.
                     </Copyright>
 
                     <FooterNav>
-                        <SocialIcon href="https://www.linkedin.com/company/paidesignlab" target="_blank" rel="noopener noreferrer">
+                        <SocialIcon href="https://www.linkedin.com/company/paidesignstudio" target="_blank" rel="noopener noreferrer">
                             <FaLinkedin size={18} />
                         </SocialIcon>
-                        <SocialIcon href="https://www.instagram.com/paidesignlab" target="_blank" rel="noopener noreferrer">
+                        <SocialIcon href="https://www.instagram.com/paidesignstudio" target="_blank" rel="noopener noreferrer">
                             <FaInstagram size={18} />
                         </SocialIcon>
-                        <SocialIcon href="https://wa.me/+12123456789" target="_blank" rel="noopener noreferrer">
+                        <SocialIcon href="https://wa.me/+919718122864" target="_blank" rel="noopener noreferrer">
                             <FaWhatsapp size={18} />
                         </SocialIcon>
                     </FooterNav>

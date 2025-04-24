@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { css, keyframes } from 'styled-components'
-import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
-import { testimonials } from '../../dummyData/dummyData';
+import { BsArrowLeft, BsArrowRight, BsPersonCircle } from "react-icons/bs";
+import { Testimonials } from '../../dummyData/dummyData';
 import useInView from '../../hooks/useInView';
 
 // Card animations - moving up from bottom
@@ -170,7 +170,7 @@ const Underline = styled.div`
   animation-play-state: ${props => props.isVisible ? 'running' : 'paused'};
 `;
 
-const TestinomialWrapper = styled.div`
+const TestimonialsWrapper = styled.div`
     display: flex;
     position: relative;
 
@@ -253,11 +253,6 @@ const Image = styled.img`
     animation-name: ${({ isExiting }) => (isExiting ? imageSwapOut : imageSwapIn)};
     transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    
-    &:hover {
-      transform: scale(1.01) translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-    }
 `;
 
 // Card with bottom-up animation like WordPress
@@ -277,11 +272,6 @@ const TestimonialCard = styled.div`
     border-radius: 8px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     transition: all 0.4s ease;
-    
-    &:hover {
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-      transform: translateY(-5px);
-    }
 
     @media screen and (max-width: 900px) {
         width: 90%;
@@ -312,15 +302,9 @@ const CardImage = styled.img`
     object-position: center;
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    filter: blur(6px);
     border-radius: 6px;
     overflow: hidden;
     filter: saturate(0.9);
-
-    &:hover {
-      filter: saturate(1.1);
-      transform: scale(1.01);
-    }
 
     @media screen and (max-width: 900px ){
         height: 300px;
@@ -332,28 +316,54 @@ const CardImage = styled.img`
     }
 `;
 
-const Avatar = styled.img`
-    border: 10px solid #181818;
+// User icon styling for the avatar
+const UserIconContainer = styled.div`
     border-radius: 100%;
     width: 180px;
-    aspect-ratio: 1;
-    object-fit: cover;
+    height: 180px;
     position: absolute;
     top: 180px;
     left: 50%;
     transform: translateX(-50%);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
-    
-    &:hover {
-      transform: translateX(-50%) scale(1.05);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    }
+    background-color: var(--color-surface, #333);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 
     @media screen and (max-width: 900px ){
         top: 220px;
         width: 160px;
+        height: 160px;
     }
+`;
+
+const UserIcon = styled(BsPersonCircle)`
+    width: 85%;
+    height: 85%;
+    opacity: 0.9;
+`;
+
+// Circle pattern with animation for the avatar background
+const CirclePattern = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    border: 2px dashed rgba(var(--color-primary-rgb, 255, 255, 255), 0.15);
+    transform: translate(-50%, -50%);
+  }
 `;
 
 const ClientName = styled.h3`
@@ -519,7 +529,6 @@ const PreloadContainer = styled.div`
 // Card container to handle stacking and transitions
 const CardContainer = styled.div`
     position: relative;
-    // height: 600px;
     width: 100%;
     
     @media screen and (max-width: 650px) {
@@ -631,7 +640,7 @@ const Testimonials = () => {
     return () => clearInterval(intervalRef.current);
   }, [currentIndex]);
 
-  const { userImg, clientName, text, image } = testimonials[currentIndex];
+  const { clientName, text, image } = testimonials[currentIndex];
   // Get next testimonial data for preloading
   const nextTestimonialData = nextIndex !== null ? testimonials[nextIndex] : null;
 
@@ -644,12 +653,18 @@ const Testimonials = () => {
         </HeadingWrapper>
         <Underline isVisible={isInView} />
       </HeadingContainer>
-      <TestinomialWrapper>
+      <TestimonialWrapper Wrapper>
         <ContentWrapper>
           <CardContainer>
             <TestimonialCard isExiting={isExiting}>
               <CardImage src={image} />
-              <Avatar src={userImg} />
+
+              {/* Professional user icon instead of avatar image */}
+              <UserIconContainer>
+                <CirclePattern />
+                <UserIcon />
+              </UserIconContainer>
+
               <ClientName>{clientName}</ClientName>
               <StoryWrapper>{text}</StoryWrapper>
 
@@ -672,7 +687,6 @@ const Testimonials = () => {
           {nextIndex !== null && (
             <PreloadContainer>
               <img src={nextTestimonialData.image} alt="" />
-              <img src={nextTestimonialData.userImg} alt="" />
             </PreloadContainer>
           )}
         </ContentWrapper>
@@ -681,8 +695,8 @@ const Testimonials = () => {
           <ImageBgLayer isSwapping={isSwapping} src={image} />
           <Image src={image} isExiting={isExiting} />
         </ReferenceWork>
-      </TestinomialWrapper>
-    </SectionLayout >
+      </TestimonialWrapper>
+    </SectionLayout>
   )
 }
 
