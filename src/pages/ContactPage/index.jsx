@@ -322,8 +322,7 @@ const ContactPage = () => {
                     <ContactText>
                       <ContactLabel>Our Location</ContactLabel>
                       <ContactValue>
-                        12th Floor, Gold Tower, Wave Noida,<br />
-                        Sector-18, Noida, Uttar Pradesh
+                        G-03, Ground floor, D-15,<br />  Sector -3, Noida, Uttar Pradesh,201301
                       </ContactValue>
                     </ContactText>
                   </ContactItem>

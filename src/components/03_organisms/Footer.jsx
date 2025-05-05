@@ -342,7 +342,7 @@ const Footer = () => {
                 <ContactInfo>
                     <ContactItem>
                         <FaMapMarkerAlt size={18} />
-                        <span>12th floor, Gold Tower, Wave Noida,<br />Sector-18, Noida, Uttar Pradesh</span>
+                        <span>G-03, Ground floor, D-15,<br />  Sector -3, Noida, Uttar Pradesh,201301</span>
                     </ContactItem>
 
                     <ContactItem>

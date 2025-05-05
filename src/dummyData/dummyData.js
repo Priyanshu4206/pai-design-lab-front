@@ -437,23 +437,17 @@ export const teamMembers = [
     name: "Abhay Tiwari",
     position: "Principal Architect",
     image: abhay_img,
-    phone: "+91 9718122864",
-    education: "B.Arch",
   },
   {
     id: 2,
     name: "Ishwer Singh",
     position: "Principal Architect",
     image: ishwer_img,
-    phone: "+91 9999033566",
-    education: "B.Arch, M.U.R.P",
   },
   {
     id: 3,
     name: "Prakhar Gupta",
     position: "Principal Architect",
     image: prakhar_img,
-    phone: "+91 8755644379",
-    education: "B.Arch",
   },
 ];

@@ -485,10 +485,6 @@ const AboutPage = () => {
               <MemberInfo>
                 <MemberName>{member.name}</MemberName>
                 <MemberPosition>{member.position}</MemberPosition>
-                <MemberDetails>
-                  <MemberContact>Phone: {member.phone}</MemberContact>
-                  <MemberContact>Education: {member.education}</MemberContact>
-                </MemberDetails>
               </MemberInfo>
             </TeamMemberCard>
           ))}
