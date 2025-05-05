@@ -333,7 +333,7 @@ const ContactPage = () => {
                     </IconWrapper>
                     <ContactText>
                       <ContactLabel>Email Us</ContactLabel>
-                      <ContactLink href="mailto:info@paidesignstudio.com">info@paidesignstudio.com</ContactLink>
+                      <ContactLink href="mailto:info@paidesignstudio.in">info@paidesignstudio.in</ContactLink>
                     </ContactText>
                   </ContactItem>
 
