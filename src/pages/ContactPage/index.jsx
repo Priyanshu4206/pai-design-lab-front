@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import AnimatedSection from '../components/AnimatedSection';
-import { MapPin, Phone, Mail, Send, CheckCircle, Check } from 'lucide-react';
+import { MapPin, Phone, Mail, Send, CheckCircle } from 'lucide-react';
 import useScrollToTop from '../../hooks/useScrollToTop';
+import sendEmail from '../../services/emailService';
+import RecaptchaComponent from '../../components/RecaptchaComponent';
+import Swal from 'sweetalert2';
 
 // Styled Components
 const PageWrapper = styled.div`
@@ -267,6 +270,7 @@ const ContactPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   const handleChange = (e) => {
     setFormState({
@@ -275,26 +279,37 @@ const ContactPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!captchaToken) {
+      Swal.fire('Error', 'Please complete the reCAPTCHA verification.', 'error');
+      return;
+    }
+    if (!formState.email && !formState.name) {
+      Swal.fire('Error', 'Please provide at least your name and email.', 'error');
+      return;
+    }
     setIsSubmitting(true);
-
-    // Simulate a form submission
-    setTimeout(() => {
+    const templateParams = {
+      name: formState.name,
+      email: formState.email,
+      subject: formState.subject,
+      message: formState.message,
+      'g-recaptcha-response': captchaToken,
+    };
+    try {
+      await sendEmail(templateParams, import.meta.env.VITE_EMAILJS_TEMPLATE_ENQUIRY_ID);
       setIsSubmitting(false);
       setIsSubmitted(true);
-      setFormState({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
-      });
-
-      // Reset success message after some time
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 5000);
-    }, 1500);
+      setFormState({ name: '', email: '', subject: '', message: '' });
+      setCaptchaToken(null);
+      Swal.fire('Success', 'Your message has been sent successfully!', 'success');
+      setTimeout(() => setIsSubmitted(false), 5000);
+    } catch (err) {
+      setIsSubmitting(false);
+      Swal.fire('Error', 'Failed to send email. Please try again later.', 'error');
+      console.error('FAILED...', err);
+    }
   };
   useScrollToTop();
 
@@ -420,10 +435,10 @@ const ContactPage = () => {
                         required
                       />
                     </FormField>
-
+                    <RecaptchaComponent onVerify={setCaptchaToken} span={2} />
                     <SubmitButton
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || !captchaToken}
                     >
                       {isSubmitting ? (
                         <span style={{ display: 'flex', alignItems: 'center' }}>
