@@ -265,7 +265,7 @@ const ContactPage = () => {
   const [formState, setFormState] = useState({
     name: '',
     email: '',
-    subject: '',
+    // subject: '', // Subject is commented out for now
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -293,7 +293,7 @@ const ContactPage = () => {
     const templateParams = {
       name: formState.name,
       email: formState.email,
-      subject: formState.subject,
+      // subject: formState.subject, // Subject is commented out for now
       message: formState.message,
       'g-recaptcha-response': captchaToken,
     };
@@ -301,7 +301,7 @@ const ContactPage = () => {
       await sendEmail(templateParams, import.meta.env.VITE_EMAILJS_TEMPLATE_ENQUIRY_ID);
       setIsSubmitting(false);
       setIsSubmitted(true);
-      setFormState({ name: '', email: '', subject: '', message: '' });
+      setFormState({ name: '', email: '', /* subject: '', */ message: '' });
       setCaptchaToken(null);
       Swal.fire('Success', 'Your message has been sent successfully!', 'success');
       setTimeout(() => setIsSubmitted(false), 5000);
@@ -412,7 +412,7 @@ const ContactPage = () => {
                       </FormField>
                     </FormGroup>
 
-                    <FormField style={{ marginBottom: '1.5rem' }}>
+                    {/* <FormField style={{ marginBottom: '1.5rem' }}>
                       <Label htmlFor="subject">Subject</Label>
                       <Input
                         type="text"
@@ -422,7 +422,7 @@ const ContactPage = () => {
                         onChange={handleChange}
                         required
                       />
-                    </FormField>
+                    </FormField> */}
 
                     <FormField style={{ marginBottom: '2rem' }}>
                       <Label htmlFor="message">Your Message</Label>
