@@ -290,6 +290,10 @@ const ContactPage = () => {
       Swal.fire('Error', 'Please provide your email address.', 'error');
       return;
     }
+    if (!formState.phone) {
+      Swal.fire('Error', 'Please provide your phone number.', 'error');
+      return;
+    }
     if (!formState.message || formState.message.trim() === '') {
       Swal.fire('Error', 'Please provide a message.', 'error');
       return;
@@ -298,7 +302,7 @@ const ContactPage = () => {
     const templateParams = {
       name: formState.name || 'Anonymous', // Use 'Anonymous' if name is not provided
       email: formState.email,
-      phone: formState.phone || 'Not provided', // Phone number (optional)
+      phone: formState.phone, // Phone number is now required
       // subject: formState.subject, // Subject is commented out for now
       message: formState.message,
       'g-recaptcha-response': captchaToken,
@@ -418,13 +422,14 @@ const ContactPage = () => {
                     </FormGroup>
 
                     <FormField style={{ marginBottom: '1.5rem' }}>
-                      <Label htmlFor="phone">Your Phone Number (Optional)</Label>
+                      <Label htmlFor="phone">Your Phone Number</Label>
                       <Input
                         type="tel"
                         id="phone"
                         name="phone"
                         value={formState.phone}
                         onChange={handleChange}
+                        required
                       />
                     </FormField>
 
