@@ -265,6 +265,7 @@ const ContactPage = () => {
   const [formState, setFormState] = useState({
     name: '',
     email: '',
+    phone: '', // Phone number field added
     // subject: '', // Subject is commented out for now
     message: ''
   });
@@ -285,14 +286,19 @@ const ContactPage = () => {
       Swal.fire('Error', 'Please complete the reCAPTCHA verification.', 'error');
       return;
     }
-    if (!formState.email && !formState.name) {
-      Swal.fire('Error', 'Please provide at least your name and email.', 'error');
+    if (!formState.email) {
+      Swal.fire('Error', 'Please provide your email address.', 'error');
+      return;
+    }
+    if (!formState.message || formState.message.trim() === '') {
+      Swal.fire('Error', 'Please provide a message.', 'error');
       return;
     }
     setIsSubmitting(true);
     const templateParams = {
-      name: formState.name,
+      name: formState.name || 'Anonymous', // Use 'Anonymous' if name is not provided
       email: formState.email,
+      phone: formState.phone || 'Not provided', // Phone number (optional)
       // subject: formState.subject, // Subject is commented out for now
       message: formState.message,
       'g-recaptcha-response': captchaToken,
@@ -301,7 +307,7 @@ const ContactPage = () => {
       await sendEmail(templateParams, import.meta.env.VITE_EMAILJS_TEMPLATE_ENQUIRY_ID);
       setIsSubmitting(false);
       setIsSubmitted(true);
-      setFormState({ name: '', email: '', /* subject: '', */ message: '' });
+      setFormState({ name: '', email: '', phone: '', /* subject: '', */ message: '' });
       setCaptchaToken(null);
       Swal.fire('Success', 'Your message has been sent successfully!', 'success');
       setTimeout(() => setIsSubmitted(false), 5000);
@@ -389,14 +395,13 @@ const ContactPage = () => {
                   <form onSubmit={handleSubmit}>
                     <FormGroup>
                       <FormField>
-                        <Label htmlFor="name">Your Name</Label>
+                        <Label htmlFor="name">Your Name (Optional)</Label>
                         <Input
                           type="text"
                           id="name"
                           name="name"
                           value={formState.name}
                           onChange={handleChange}
-                          required
                         />
                       </FormField>
                       <FormField>
@@ -411,6 +416,17 @@ const ContactPage = () => {
                         />
                       </FormField>
                     </FormGroup>
+
+                    <FormField style={{ marginBottom: '1.5rem' }}>
+                      <Label htmlFor="phone">Your Phone Number (Optional)</Label>
+                      <Input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formState.phone}
+                        onChange={handleChange}
+                      />
+                    </FormField>
 
                     {/* <FormField style={{ marginBottom: '1.5rem' }}>
                       <Label htmlFor="subject">Subject</Label>
